@@ -1,0 +1,12 @@
+#!/bin/sh
+
+npx concurrently \
+  --kill-others-on-fail \
+  --prefix "[{name}]" \
+  --names "test,lint,typecheck,build,lint-staged" \
+  --prefix-colors "bgRed.bold.white,bgGreen.bold.white,bgBlue.bold.white,bgMagenta.bold.white,bgYellow.bold.white" \
+    "pnpm run test --silent -- --watch=false" \
+    "pnpm run lint --silent" \
+    "pnpm run typecheck --silent" \
+    "pnpm run build --silent" \
+    "lint-staged"
