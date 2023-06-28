@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { ThunkAction } from 'redux-thunk';
 import { Action } from 'redux';
 
+import userReducer from '../entities/user/lib/userSlice';
 import counterReducer from '../entities/counter';
 
 // ---
@@ -9,6 +10,7 @@ import counterReducer from '../entities/counter';
 const store = configureStore({
 	reducer: {
 		counter: counterReducer,
+		user: userReducer,
 	},
 });
 

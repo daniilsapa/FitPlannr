@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Provider as StoreProvider } from 'react-redux';
 import { Layout, Menu, Row, Col, ConfigProvider, Switch, theme } from 'antd';
 import { UnorderedListOutlined, HomeOutlined } from '@ant-design/icons';
 import { Routes, Route, BrowserRouter, useNavigate } from 'react-router-dom';
@@ -8,10 +7,14 @@ import { Routes, Route, BrowserRouter, useNavigate } from 'react-router-dom';
 import type { MenuProps } from 'antd';
 import type { SiderTheme } from 'antd/lib/layout/Sider';
 
-import { I18nProvider, locales } from './i18n';
-import store from './app/store';
+import ProtectedRoute from './app/ProtectedRoute';
+import { useAppSelector } from './app/hooks';
+import { selectIsAuthenticated } from './entities/user/lib/userSlice';
+import { I18nProvider, locales } from './app/i18n';
 import AboutPage from './pages/about';
+import AuthPage from './pages/auth';
 import MainPage from './pages/main';
+
 import './App.css';
 
 // ---
@@ -83,7 +86,8 @@ function SideBarMenu({ menuItems }: SideBarMenuProps) {
 }
 
 function App() {
-	const [locale, setLocale] = useState(locales.ENGLISH);
+	const isAuthenticated = useAppSelector(selectIsAuthenticated);
+	const [locale, setLocale] = useState(locales.UKRAINIAN);
 	const [currentTheme, setTheme] = useState('light');
 
 	const handleThemeChange = (checked: boolean) => {
@@ -107,44 +111,58 @@ function App() {
 				},
 			}}
 		>
-			<StoreProvider store={store}>
-				<BrowserRouter>
-					<I18nProvider locale={locale}>
-						<Layout style={{ minHeight: '100vh' }}>
-							<Header>Header</Header>
-							<Layout hasSider>
-								<Sider theme={currentTheme as SiderTheme}>
-									<SideBarMenu menuItems={items} />
-									<Switch
-										checkedChildren="Dark"
-										unCheckedChildren="Light"
-										onChange={handleThemeChange}
-									/>
-								</Sider>
-								<Content>
-									<Row>
-										<Col span={24}>
-											<Routes>
-												<Route path="/" element={<MainPage />} />
-												<Route
-													path="/about"
-													element={
-														<AboutPage
-															onChangeLocale={changeLocale}
-															locale={locale}
-														/>
-													}
+			<BrowserRouter>
+				<I18nProvider locale={locale}>
+					<Routes>
+						<Route
+							path="/"
+							element={
+								<ProtectedRoute
+									navigateTo="/auth"
+									isAuthenticated={isAuthenticated}
+								>
+									<Layout style={{ minHeight: '100vh' }}>
+										<Header>Header</Header>
+										<Layout hasSider>
+											<Sider theme={currentTheme as SiderTheme}>
+												<SideBarMenu menuItems={items} />
+												<Switch
+													checkedChildren="Dark"
+													unCheckedChildren="Light"
+													onChange={handleThemeChange}
 												/>
-											</Routes>
-										</Col>
-									</Row>
-								</Content>
-							</Layout>
-							<Footer>Footer</Footer>
-						</Layout>
-					</I18nProvider>
-				</BrowserRouter>
-			</StoreProvider>
+											</Sider>
+											<Content>
+												<Row>
+													<Col span={24}>
+														<MainPage />
+													</Col>
+												</Row>
+											</Content>
+										</Layout>
+										<Footer>Footer</Footer>
+									</Layout>
+								</ProtectedRoute>
+							}
+						/>
+						<Route
+							path="/auth"
+							element={<AuthPage isAuthenticated={isAuthenticated} />}
+						/>
+						<Route
+							path="/about"
+							element={
+								<ProtectedRoute
+									navigateTo="/auth"
+									isAuthenticated={isAuthenticated}
+								>
+									<AboutPage onChangeLocale={changeLocale} locale={locale} />
+								</ProtectedRoute>
+							}
+						/>
+					</Routes>
+				</I18nProvider>
+			</BrowserRouter>
 		</ConfigProvider>
 	);
 }

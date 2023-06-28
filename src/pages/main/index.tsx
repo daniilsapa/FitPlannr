@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Divider, Space } from 'antd';
 
-import { I18nMessage } from '../../i18n';
+import { I18nMessage } from '../../shared/ui/i18n';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import logo from './img.png';
 
