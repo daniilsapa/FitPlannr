@@ -1,20 +1,20 @@
-import React, { useEffect } from 'react';
-import { Button, Form, Input, Typography } from 'antd';
-import { useForm, Controller } from 'react-hook-form';
+import React from 'react';
+import { Button, Form, Typography } from 'antd';
 import { I18nMessage } from '../../../shared/ui/i18n';
+
+import EmailField from './EmailField';
+import PasswordField from './PasswordField';
 
 // ---
 
 const { Title } = Typography;
 
-export default function SignUpForm() {
-	const { control, setFocus } = useForm();
+interface SignInFormProps {
+	switchToSignUp: () => void;
+}
 
+export default function SignInForm({ switchToSignUp }: SignInFormProps) {
 	const handleFormSubmit = () => {};
-
-	useEffect(() => {
-		setFocus('username');
-	}, [setFocus]);
 
 	return (
 		<div>
@@ -22,38 +22,14 @@ export default function SignUpForm() {
 				<I18nMessage id="User.signIn" />
 			</Title>
 
-			<Form onFinish={handleFormSubmit} layout="vertical">
-				<Form.Item label={<I18nMessage id="User.email" />}>
-					<Controller
-						name="email"
-						control={control}
-						rules={{ required: true }}
-						render={({ field: { onChange, onBlur, value, ref } }) => (
-							<Input
-								value={value}
-								onChange={onChange}
-								onBlur={onBlur}
-								ref={ref}
-							/>
-						)}
-					/>
-				</Form.Item>
+			<Form
+				onFinish={handleFormSubmit}
+				validateTrigger="onSubmit"
+				layout="vertical"
+			>
+				<EmailField />
 
-				<Form.Item label={<I18nMessage id="User.password" />}>
-					<Controller
-						name="password"
-						control={control}
-						rules={{ required: true }}
-						render={({ field: { onChange, onBlur, value, ref } }) => (
-							<Input.Password
-								value={value}
-								onChange={onChange}
-								onBlur={onBlur}
-								ref={ref}
-							/>
-						)}
-					/>
-				</Form.Item>
+				<PasswordField />
 
 				<Form.Item>
 					<Button type="primary" htmlType="submit">
@@ -61,6 +37,12 @@ export default function SignUpForm() {
 					</Button>
 				</Form.Item>
 			</Form>
+			<div>
+				<I18nMessage id="User.doNotHaveAccount" />
+				<Button type="link" onClick={switchToSignUp}>
+					<I18nMessage id="User.signUp" />
+				</Button>
+			</div>
 		</div>
 	);
 }

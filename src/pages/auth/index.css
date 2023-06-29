@@ -6,5 +6,6 @@
 }
 
 .auth-page-inner {
+	width: 100%;
 	max-width: 22em;
 }

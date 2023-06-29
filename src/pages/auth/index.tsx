@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { Navigate } from 'react-router-dom';
-import { Button } from 'antd';
 
 import { SignInForm, SignUpForm } from '../../entities/user';
 
 import './index.css';
-import { I18nMessage } from '../../shared/ui/i18n';
 
 // ---
 
@@ -26,25 +24,9 @@ export default function AuthPage({ isAuthenticated }: AuthPageProps) {
 				<div>
 					<div>
 						{isSignIn ? (
-							<>
-								<SignInForm />
-								<div>
-									<I18nMessage id="User.doNotHaveAccount" />
-									<Button type="link" onClick={() => setIsSignIn(!isSignIn)}>
-										<I18nMessage id="User.signUp" />
-									</Button>
-								</div>
-							</>
+							<SignInForm switchToSignUp={() => setIsSignIn(false)} />
 						) : (
-							<>
-								<SignUpForm />
-								<div>
-									<I18nMessage id="User.alreadyHaveAccount" />
-									<Button type="link" onClick={() => setIsSignIn(!isSignIn)}>
-										<I18nMessage id="User.signIn" />
-									</Button>
-								</div>
-							</>
+							<SignUpForm switchToSignIn={() => setIsSignIn(true)} />
 						)}
 					</div>
 				</div>

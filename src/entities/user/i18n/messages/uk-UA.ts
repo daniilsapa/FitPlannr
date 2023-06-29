@@ -8,4 +8,25 @@ export default {
 	'User.submit': 'Відправити',
 	'User.doNotHaveAccount': 'Немає аккаунта?',
 	'User.alreadyHaveAccount': 'Вже є аккаунт?',
+
+	'User.validation.email.required': "Email обов'язковий",
+	'User.validation.email.invalid': 'Будь ласка, введіть валідний email',
+
+	'User.passwordConstraints': 'Формат пароля',
+	'User.validation.password.required': "Пароль обов'язковий!",
+	'User.validation.password.length': '8-32 символи',
+	'User.validation.password.minLength': 'Мінімум 8 символів!',
+	'User.validation.password.maxLength': 'Максимум 32 символи!',
+	'User.validation.password.atLeastOneLowerLetter':
+		'Мінімум одна маленька літера',
+	'User.validation.password.atLeastOneUpperLetter':
+		'Мінімум одна велика літера',
+	'User.validation.password.atLeastOneDigit': 'Мінімум одна цифра',
+	'User.validation.password.atLeastOneSpecialCharacter':
+		'Мінімум один спеціальний символ (наприклад: !@#$%^&*)',
+
+	'User.validation.inviteCode.required': "Код запрошення обов'язковий!",
+
+	'User.signUp.successTitle': 'Ви успішно зареєструвалися!',
+	'User.signUp.successSubtitle': 'Будь ласка, увійдіть щоб продовжити',
 };
