@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { Layout, Menu, Row, Col, ConfigProvider, Switch, theme } from 'antd';
-import { UnorderedListOutlined, HomeOutlined } from '@ant-design/icons';
+import {
+	Layout,
+	Menu,
+	Row,
+	Col,
+	ConfigProvider,
+	Switch,
+	Image,
+	theme,
+} from 'antd';
+import { UnorderedListOutlined } from '@ant-design/icons';
 import { Routes, Route, BrowserRouter, useNavigate } from 'react-router-dom';
 
 // Types
 import type { MenuProps } from 'antd';
-import type { SiderTheme } from 'antd/lib/layout/Sider';
 
 import ProtectedRoute from './app/ProtectedRoute';
 import { useAppDispatch, useAppSelector } from './app/hooks';
@@ -18,11 +26,15 @@ import AboutPage from './pages/about';
 import AuthPage from './pages/auth';
 import MainPage from './pages/main';
 
-import './App.css';
+import logo from './app/logo.svg';
+import logoWhite from './app/logo-white.svg';
+import CategoriesPage from './pages/categories';
+import CategorySinglePage from './pages/category-single';
+import { fetchCategories } from './entities/category/lib/categorySlice';
 
 // ---
 
-const { Header, Footer, Sider, Content } = Layout;
+const { Header, Footer, Content } = Layout;
 type MenuItem = Required<MenuProps>['items'][number];
 
 function prepareItemProps(
@@ -44,8 +56,9 @@ function prepareItemProps(
 const localeSequence = [locales.ENGLISH, locales.UKRAINIAN, locales.RUSSIAN];
 
 const items: MenuItem[] = [
-	prepareItemProps('Home', 1, <HomeOutlined />),
-	prepareItemProps('About', 2, <UnorderedListOutlined />),
+	prepareItemProps('Categories', 1, <UnorderedListOutlined />),
+	prepareItemProps('Exercises', 2, <UnorderedListOutlined />),
+	prepareItemProps('Workouts', 3, <UnorderedListOutlined />),
 ];
 
 interface ThemeData {
@@ -57,8 +70,9 @@ interface SideBarMenuProps {
 }
 
 const navigation = [
-	{ label: 'Home', key: 1, target: '/' },
-	{ label: 'About', key: 2, target: '/about' },
+	{ label: 'Categories', key: 1, target: '/categories' },
+	{ label: 'Exercises', key: 2, target: '/exercises' },
+	{ label: 'Workouts', key: 3, target: '/workouts' },
 ];
 
 const themes: ThemeData = {
@@ -66,7 +80,7 @@ const themes: ThemeData = {
 	dark: theme.darkAlgorithm,
 };
 
-function SideBarMenu({ menuItems }: SideBarMenuProps) {
+function NavMenu({ menuItems }: SideBarMenuProps) {
 	const navigate = useNavigate();
 	const handleMenuClick = ({ key }: { key: string }) => {
 		const { target } =
@@ -81,7 +95,8 @@ function SideBarMenu({ menuItems }: SideBarMenuProps) {
 		<Menu
 			defaultSelectedKeys={['1']}
 			defaultOpenKeys={['sub1']}
-			mode="inline"
+			theme="dark"
+			mode="horizontal"
 			onClick={handleMenuClick}
 			items={menuItems}
 		/>
@@ -114,6 +129,7 @@ function App() {
 	useEffect(() => {
 		if (isAuthenticated) {
 			dispatch(getUserProfile());
+			dispatch(fetchCategories());
 		}
 	});
 
@@ -128,55 +144,104 @@ function App() {
 		>
 			<BrowserRouter>
 				<I18nProvider locale={locale}>
-					<Routes>
-						<Route
-							path="/"
-							element={
-								<ProtectedRoute
-									navigateTo="/auth"
-									isAuthenticated={isAuthenticated}
-								>
-									<Layout style={{ minHeight: '100vh' }}>
-										<Header>Header</Header>
-										<Layout hasSider>
-											<Sider theme={currentTheme as SiderTheme}>
-												<SideBarMenu menuItems={items} />
-												<Switch
-													checkedChildren="Dark"
-													unCheckedChildren="Light"
-													defaultChecked={currentTheme === 'dark'}
-													onChange={handleThemeChange}
-												/>
-											</Sider>
-											<Content>
-												<Row>
-													<Col span={24}>
-														<MainPage />
-													</Col>
-												</Row>
-											</Content>
-										</Layout>
-										<Footer>Footer</Footer>
-									</Layout>
-								</ProtectedRoute>
-							}
-						/>
-						<Route
-							path="/auth"
-							element={<AuthPage isAuthenticated={isAuthenticated} />}
-						/>
-						<Route
-							path="/about"
-							element={
-								<ProtectedRoute
-									navigateTo="/auth"
-									isAuthenticated={isAuthenticated}
-								>
-									<AboutPage onChangeLocale={changeLocale} locale={locale} />
-								</ProtectedRoute>
-							}
-						/>
-					</Routes>
+					<Layout style={{ minHeight: '100vh' }}>
+						<Header
+							style={{
+								display: 'flex',
+								alignItems: 'center',
+								justifyContent: 'space-between',
+							}}
+						>
+							<div style={{ display: 'flex', gap: '1em' }}>
+								<Image
+									alt="Site logo"
+									src={currentTheme === 'dark' ? logoWhite : logo}
+									width="100px"
+									preview={false}
+								/>
+								<NavMenu menuItems={items} />
+							</div>
+							<div>
+								<Switch
+									checkedChildren="Dark"
+									unCheckedChildren="Light"
+									defaultChecked={currentTheme === 'dark'}
+									onChange={handleThemeChange}
+								/>
+							</div>
+						</Header>
+						<Content style={{ paddingTop: '3em' }}>
+							<Routes>
+								<Route
+									path="/category/:id"
+									element={
+										<ProtectedRoute
+											navigateTo="/auth"
+											isAuthenticated={isAuthenticated}
+										>
+											<CategorySinglePage />
+										</ProtectedRoute>
+									}
+								/>
+								<Route
+									path="/category"
+									element={
+										<ProtectedRoute
+											navigateTo="/auth"
+											isAuthenticated={isAuthenticated}
+										>
+											<CategorySinglePage />
+										</ProtectedRoute>
+									}
+								/>
+								<Route
+									path="/categories"
+									element={
+										<ProtectedRoute
+											navigateTo="/auth"
+											isAuthenticated={isAuthenticated}
+										>
+											<CategoriesPage />
+										</ProtectedRoute>
+									}
+								/>
+								<Route
+									path="/"
+									element={
+										<ProtectedRoute
+											navigateTo="/auth"
+											isAuthenticated={isAuthenticated}
+										>
+											<Row>
+												<Col span={24}>
+													<MainPage />
+												</Col>
+											</Row>
+										</ProtectedRoute>
+									}
+								/>
+								<Route
+									path="/auth"
+									element={<AuthPage isAuthenticated={isAuthenticated} />}
+								/>
+								<Route
+									path="/about"
+									element={
+										<ProtectedRoute
+											navigateTo="/auth"
+											isAuthenticated={isAuthenticated}
+										>
+											<AboutPage
+												onChangeLocale={changeLocale}
+												locale={locale}
+											/>
+										</ProtectedRoute>
+									}
+								/>
+							</Routes>
+						</Content>
+						<Footer>Footer</Footer>
+					</Layout>
 				</I18nProvider>
 			</BrowserRouter>
 		</ConfigProvider>

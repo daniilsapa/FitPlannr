@@ -3,7 +3,6 @@ import { Button, Divider, Space } from 'antd';
 
 import { I18nMessage } from '../../shared/ui/i18n';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
-import logo from './img.png';
 
 import {
 	increment,
@@ -21,7 +20,6 @@ function MainPage() {
 
 	return (
 		<header className="app-header">
-			<img src={logo} className="app-logo" alt="logo" />
 			<p>
 				<I18nMessage id="edit" value={{ path: <code>src/App.tsx</code> }} />
 			</p>
