@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { User } from '../model';
-import { signIn, signUp, getProfile } from '../api';
+import { signIn, getProfile, isAPIAuthenticated } from '../api';
 
 // ---
 
@@ -18,7 +18,7 @@ interface GlobalStatePart {
 const initialState: UserState = {
 	user: null,
 	isLoading: false,
-	isAuthenticated: !!localStorage.getItem('auth-token'),
+	isAuthenticated: isAPIAuthenticated(),
 };
 
 export const getUserProfile = createAsyncThunk(
@@ -29,43 +29,17 @@ export const getUserProfile = createAsyncThunk(
 	}
 );
 
-export const signUpUser = createAsyncThunk(
-	'user/signUp',
-	async (
-		{
-			email,
-			password,
-			inviteCode,
-		}: { email: string; password: string; inviteCode: string },
-		{ dispatch, getState }
-	) => {
-		const currentState: UserState = getState() as UserState;
-
-		if (!currentState.isAuthenticated) {
-			await signUp(email, password, inviteCode);
-		}
-
-		dispatch(getUserProfile());
-	}
-);
-
 export const signInUser = createAsyncThunk(
 	'user/signIn',
 	async (
 		{ email, password }: { email: string; password: string },
-		{ dispatch, getState }
+		{ getState }
 	) => {
 		const currentState: UserState = getState() as UserState;
 
 		if (!currentState.isAuthenticated) {
-			const response = await signIn(email, password);
-
-			if (response.status === 200) {
-				localStorage.setItem('auth-token', response.data.accessToken);
-			}
+			await signIn(email, password);
 		}
-
-		dispatch(getUserProfile());
 	}
 );
 

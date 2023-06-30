@@ -1,10 +1,12 @@
-import api, { setAuthToken } from '../../../shared/api';
+import api, { authenticateAPI } from '../../../shared/api';
 
 // ---
 
 export function signIn(email: string, password: string) {
 	return api.post('/auth/sign-in', { email, password }).then((response) => {
-		setAuthToken(response.data.accessToken);
+		if (response.status === 200) {
+			authenticateAPI(response.data.accessToken);
+		}
 		return Promise.resolve(response);
 	});
 }
@@ -16,3 +18,5 @@ export function signUp(email: string, password: string, inviteCode: string) {
 export function getProfile() {
 	return api.get('/auth/profile');
 }
+
+export { isAPIAuthenticated } from '../../../shared/api';

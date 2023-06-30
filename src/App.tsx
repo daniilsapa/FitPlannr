@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Layout, Menu, Row, Col, ConfigProvider, Switch, theme } from 'antd';
 import { UnorderedListOutlined, HomeOutlined } from '@ant-design/icons';
 import { Routes, Route, BrowserRouter, useNavigate } from 'react-router-dom';
@@ -8,8 +8,11 @@ import type { MenuProps } from 'antd';
 import type { SiderTheme } from 'antd/lib/layout/Sider';
 
 import ProtectedRoute from './app/ProtectedRoute';
-import { useAppSelector } from './app/hooks';
-import { selectIsAuthenticated } from './entities/user/lib/userSlice';
+import { useAppDispatch, useAppSelector } from './app/hooks';
+import {
+	getUserProfile,
+	selectIsAuthenticated,
+} from './entities/user/lib/userSlice';
 import { I18nProvider, locales } from './app/i18n';
 import AboutPage from './pages/about';
 import AuthPage from './pages/auth';
@@ -85,13 +88,19 @@ function SideBarMenu({ menuItems }: SideBarMenuProps) {
 	);
 }
 
+const THEME_STORAGE_KEY = 'theme';
+
 function App() {
 	const isAuthenticated = useAppSelector(selectIsAuthenticated);
+	const dispatch = useAppDispatch();
 	const [locale, setLocale] = useState(locales.UKRAINIAN);
-	const [currentTheme, setTheme] = useState('light');
+	const [currentTheme, setTheme] = useState(
+		localStorage.getItem(THEME_STORAGE_KEY) || 'light'
+	);
 
 	const handleThemeChange = (checked: boolean) => {
 		setTheme(checked ? 'dark' : 'light');
+		localStorage.setItem(THEME_STORAGE_KEY, checked ? 'dark' : 'light');
 	};
 
 	const changeLocale = () => {
@@ -101,6 +110,12 @@ function App() {
 
 		setLocale(nextLocale);
 	};
+
+	useEffect(() => {
+		if (isAuthenticated) {
+			dispatch(getUserProfile());
+		}
+	});
 
 	return (
 		<ConfigProvider
@@ -129,6 +144,7 @@ function App() {
 												<Switch
 													checkedChildren="Dark"
 													unCheckedChildren="Light"
+													defaultChecked={currentTheme === 'dark'}
 													onChange={handleThemeChange}
 												/>
 											</Sider>

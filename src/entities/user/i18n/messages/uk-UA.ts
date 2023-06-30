@@ -29,4 +29,7 @@ export default {
 
 	'User.signUp.successTitle': 'Ви успішно зареєструвалися!',
 	'User.signUp.successSubtitle': 'Будь ласка, увійдіть щоб продовжити',
+
+	'User.signIn.successTitle': 'Ви успішно увійшли!',
+	'User.signIn.successSubtitle': 'Перенаправляємо в додаток...',
 };

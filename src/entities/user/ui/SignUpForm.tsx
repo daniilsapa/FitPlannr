@@ -66,7 +66,7 @@ export default function SignUpForm({ switchToSignIn }: SignUpFormProps) {
 			]}
 		/>
 	) : (
-		<Spin spinning={isPending} delay={500}>
+		<Spin spinning={isPending} delay={200}>
 			<div>
 				<Title level={2}>
 					<I18nMessage id="User.signUp" />

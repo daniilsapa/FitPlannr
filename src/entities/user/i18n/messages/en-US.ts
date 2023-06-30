@@ -29,4 +29,7 @@ export default {
 
 	'User.signUp.successTitle': 'You have successfully signed up!',
 	'User.signUp.successSubtitle': 'Please sign in to continue',
+
+	'User.signIn.successTitle': 'You have successfully signed in!',
+	'User.signIn.successSubtitle': 'Redirecting to the dashboard...',
 };
