@@ -30,7 +30,14 @@ import logo from './app/logo.svg';
 import logoWhite from './app/logo-white.svg';
 import CategoriesPage from './pages/categories';
 import CategorySinglePage from './pages/category-single';
-import { fetchCategories } from './entities/category/lib/categorySlice';
+import { fetchCategories } from './entities/category/lib/category-slice';
+import { fetchClients } from './entities/client/lib/client-slice';
+import { fetchWorkouts } from './entities/workout/lib/workout-slice';
+import { fetchExercises } from './entities/exercise/lib/exercise-slice';
+import ExerciseSinglePage from './pages/exercise-single';
+import ExercisesPage from './pages/exercises';
+import WorkoutSinglePage from './pages/workout-single';
+import WorkoutsPage from './pages/workouts';
 
 // ---
 
@@ -130,6 +137,9 @@ function App() {
 		if (isAuthenticated) {
 			dispatch(getUserProfile());
 			dispatch(fetchCategories());
+			dispatch(fetchExercises());
+			dispatch(fetchClients());
+			dispatch(fetchWorkouts());
 		}
 	});
 
@@ -195,6 +205,39 @@ function App() {
 									}
 								/>
 								<Route
+									path="/exercise"
+									element={
+										<ProtectedRoute
+											navigateTo="/auth"
+											isAuthenticated={isAuthenticated}
+										>
+											<ExerciseSinglePage />
+										</ProtectedRoute>
+									}
+								/>
+								<Route
+									path="/exercise/:id"
+									element={
+										<ProtectedRoute
+											navigateTo="/auth"
+											isAuthenticated={isAuthenticated}
+										>
+											<ExerciseSinglePage />
+										</ProtectedRoute>
+									}
+								/>
+								<Route
+									path="/exercises"
+									element={
+										<ProtectedRoute
+											navigateTo="/auth"
+											isAuthenticated={isAuthenticated}
+										>
+											<ExercisesPage />
+										</ProtectedRoute>
+									}
+								/>
+								<Route
 									path="/categories"
 									element={
 										<ProtectedRoute
@@ -202,6 +245,39 @@ function App() {
 											isAuthenticated={isAuthenticated}
 										>
 											<CategoriesPage />
+										</ProtectedRoute>
+									}
+								/>
+								<Route
+									path="/workout"
+									element={
+										<ProtectedRoute
+											navigateTo="/auth"
+											isAuthenticated={isAuthenticated}
+										>
+											<WorkoutSinglePage />
+										</ProtectedRoute>
+									}
+								/>
+								<Route
+									path="/workout/:id"
+									element={
+										<ProtectedRoute
+											navigateTo="/auth"
+											isAuthenticated={isAuthenticated}
+										>
+											<WorkoutSinglePage />
+										</ProtectedRoute>
+									}
+								/>
+								<Route
+									path="/workouts"
+									element={
+										<ProtectedRoute
+											navigateTo="/auth"
+											isAuthenticated={isAuthenticated}
+										>
+											<WorkoutsPage />
 										</ProtectedRoute>
 									}
 								/>

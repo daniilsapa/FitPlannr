@@ -16,19 +16,21 @@ import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import {
-	deleteCategory,
-	selectAllCategories,
-} from '../../entities/category/lib/category-slice';
+	deleteExercise,
+	selectAllExercises,
+} from '../../entities/exercise/lib/exercise-slice';
+
+import { selectCategoryEntities } from '../../entities/category/lib/category-slice';
 
 // ---
 
 const { Search } = Input;
 
-interface CategorySearchProps {
+interface ExerciseSearchProps {
 	onSearch: (value: string) => void;
 }
 
-function CategorySearch({ onSearch }: CategorySearchProps) {
+function ExerciseSearch({ onSearch }: ExerciseSearchProps) {
 	const navigate = useNavigate();
 	return (
 		<Space.Compact block size="large">
@@ -38,18 +40,19 @@ function CategorySearch({ onSearch }: CategorySearchProps) {
 				size="large"
 				onSearch={onSearch}
 			/>
-			<Button onClick={() => navigate('/category')}>
+			<Button onClick={() => navigate('/exercise')}>
 				<PlusOutlined />
 			</Button>
 		</Space.Compact>
 	);
 }
 
-export default function CategoriesPage() {
-	const categories = useAppSelector(selectAllCategories);
+export default function ExercisesPage() {
+	const categories = useAppSelector(selectCategoryEntities);
+	const exercises = useAppSelector(selectAllExercises);
 	const dispatch = useAppDispatch();
 	const [filterQuery, setFilterQuery] = useState('');
-	const filteredData = categories
+	const filteredData = exercises
 		.map(({ _id, ...rest }) => ({ ...rest, id: _id }))
 		.filter((item) =>
 			item.name.toLowerCase().includes(filterQuery.toLowerCase())
@@ -61,7 +64,7 @@ export default function CategoriesPage() {
 	return (
 		<Row>
 			<Col span={8} offset={8}>
-				<CategorySearch onSearch={setFilterQuery} />
+				<ExerciseSearch onSearch={setFilterQuery} />
 				<Divider />
 				<List
 					size="small"
@@ -69,9 +72,20 @@ export default function CategoriesPage() {
 					dataSource={filteredData}
 					renderItem={(item) => (
 						<List.Item key={item.id}>
-							<Tag color={item.color}>{item.name}</Tag>
+							<span>{item.name}</span>
+
+							<span>
+								{item.categories.map((categoryId) =>
+									typeof categories[categoryId] !== 'undefined' ? (
+										<Tag key={categoryId} color={categories[categoryId]?.color}>
+											{categories[categoryId]?.name}
+										</Tag>
+									) : null
+								)}
+							</span>
+
 							<div>
-								<Link to={`/category/${item.id}`}>
+								<Link to={`/exercise/${item.id}`}>
 									<Button type="text">
 										<EditOutlined />
 									</Button>
@@ -80,7 +94,7 @@ export default function CategoriesPage() {
 									placement="topRight"
 									title={text}
 									description={description}
-									onConfirm={() => dispatch(deleteCategory(item.id))}
+									onConfirm={() => dispatch(deleteExercise(item.id))}
 									okText="Yes"
 									cancelText="No"
 								>

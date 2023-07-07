@@ -24,14 +24,15 @@ module.exports = {
     'react/react-in-jsx-scope': 0,
     'indent': 'off',
     '@typescript-eslint/indent': 'off',
-    "prettier/prettier": ["error", {
-      "endOfLine": "auto",
-      "printWidth": 80,
-      "trailingComma": "es5",
-      "singleQuote": true,
-      "useTabs": true,
-      "tabWidth": 2,
+    'prettier/prettier': ['error', {
+      'endOfLine': 'auto',
+      'printWidth': 80,
+      'trailingComma': 'es5',
+      'singleQuote': true,
+      'useTabs': true,
+      'tabWidth': 2,
     }],
     'no-param-reassign': ['error', { props: true, ignorePropertyModificationsFor: ['state'] }],
+    'no-underscore-dangle':  ['error', { 'allow': ['_id'] }]
   }
 };

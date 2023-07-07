@@ -5,7 +5,6 @@ import {
 	Col,
 	Row,
 	Divider,
-	Tag,
 	Button,
 	Space,
 	theme,
@@ -16,19 +15,20 @@ import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import {
-	deleteCategory,
-	selectAllCategories,
-} from '../../entities/category/lib/category-slice';
+	deleteWorkout,
+	selectAllWorkouts,
+} from '../../entities/workout/lib/workout-slice';
+import { Workout } from '../../entities/workout/model';
 
 // ---
 
 const { Search } = Input;
 
-interface CategorySearchProps {
+interface WorkoutSearchProps {
 	onSearch: (value: string) => void;
 }
 
-function CategorySearch({ onSearch }: CategorySearchProps) {
+function WorkoutSearch({ onSearch }: WorkoutSearchProps) {
 	const navigate = useNavigate();
 	return (
 		<Space.Compact block size="large">
@@ -38,22 +38,20 @@ function CategorySearch({ onSearch }: CategorySearchProps) {
 				size="large"
 				onSearch={onSearch}
 			/>
-			<Button onClick={() => navigate('/category')}>
+			<Button onClick={() => navigate('/workout')}>
 				<PlusOutlined />
 			</Button>
 		</Space.Compact>
 	);
 }
 
-export default function CategoriesPage() {
-	const categories = useAppSelector(selectAllCategories);
+export default function WorkoutsPage() {
+	const workouts = useAppSelector(selectAllWorkouts);
 	const dispatch = useAppDispatch();
 	const [filterQuery, setFilterQuery] = useState('');
-	const filteredData = categories
-		.map(({ _id, ...rest }) => ({ ...rest, id: _id }))
-		.filter((item) =>
-			item.name.toLowerCase().includes(filterQuery.toLowerCase())
-		);
+	const filteredData = workouts.filter((item: Workout) =>
+		item.title.toLowerCase().includes(filterQuery.toLowerCase())
+	);
 
 	const text = 'Are you sure to delete this task?';
 	const description = 'Delete the task';
@@ -61,17 +59,17 @@ export default function CategoriesPage() {
 	return (
 		<Row>
 			<Col span={8} offset={8}>
-				<CategorySearch onSearch={setFilterQuery} />
+				<WorkoutSearch onSearch={setFilterQuery} />
 				<Divider />
 				<List
 					size="small"
 					bordered
 					dataSource={filteredData}
-					renderItem={(item) => (
-						<List.Item key={item.id}>
-							<Tag color={item.color}>{item.name}</Tag>
+					renderItem={(item: Workout) => (
+						<List.Item key={item._id}>
+							{item.title}
 							<div>
-								<Link to={`/category/${item.id}`}>
+								<Link to={`/workout/${item._id}`}>
 									<Button type="text">
 										<EditOutlined />
 									</Button>
@@ -80,7 +78,7 @@ export default function CategoriesPage() {
 									placement="topRight"
 									title={text}
 									description={description}
-									onConfirm={() => dispatch(deleteCategory(item.id))}
+									onConfirm={() => dispatch(deleteWorkout(item._id))}
 									okText="Yes"
 									cancelText="No"
 								>

@@ -10,7 +10,6 @@ import type { Category, NewCategory } from '../model';
 // ---
 
 const categoryAdapter = createEntityAdapter({
-	// eslint-disable-next-line no-underscore-dangle
 	selectId: (category: Category) => category._id,
 	sortComparer: (a: Category, b: Category) => a.name.localeCompare(b.name),
 });
@@ -43,7 +42,6 @@ export const deleteCategory = createAsyncThunk(
 export const updateCategory = createAsyncThunk(
 	'categories/updateCategory',
 	async (category: Category) => {
-		// eslint-disable-next-line no-underscore-dangle
 		await api.updateCategory(category._id, category);
 		return category;
 	}
@@ -90,6 +88,7 @@ export const {
 	selectAll: selectAllCategories,
 	selectById: selectCategoryById,
 	selectIds: selectCategoryIds,
+	selectEntities: selectCategoryEntities,
 	// Pass in a selector that returns the posts slice of state
 } = categoryAdapter.getSelectors((state: GlobalStatePart) => state.categories);
 

@@ -9,7 +9,7 @@ import {
 	updateCategory,
 	addCategory,
 	selectCategoryById,
-} from '../../entities/category/lib/categorySlice';
+} from '../../entities/category/lib/category-slice';
 import { Category, NewCategory } from '../../entities/category/model';
 
 // ---
