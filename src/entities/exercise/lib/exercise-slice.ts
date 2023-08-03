@@ -48,11 +48,11 @@ export const updateExercise = createAsyncThunk(
 );
 
 const initialState = exerciseAdapter.getInitialState({
-	isLoading: false,
+	isLoading: true,
 });
 
 interface GlobalStatePart {
-	exercises: ReturnType<typeof exerciseAdapter.getInitialState>;
+	exercises: typeof initialState;
 }
 
 const exerciseSlice = createSlice({
@@ -60,16 +60,17 @@ const exerciseSlice = createSlice({
 	initialState,
 	reducers: {},
 	extraReducers: (builder) => {
-		builder.addCase(fetchExercises.pending, (state) => {
-			state.isLoading = true;
-		});
-		builder.addCase(fetchExercises.fulfilled, (state, action) => {
-			state.isLoading = false;
-			exerciseAdapter.setAll(state, action.payload);
-		});
-		builder.addCase(addExercise.fulfilled, exerciseAdapter.addOne);
-		builder.addCase(deleteExercise.fulfilled, exerciseAdapter.removeOne);
-		builder.addCase(updateExercise.fulfilled, exerciseAdapter.upsertOne);
+		builder
+			.addCase(fetchExercises.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(fetchExercises.fulfilled, (state, action) => {
+				state.isLoading = false;
+				exerciseAdapter.setAll(state, action.payload);
+			})
+			.addCase(addExercise.fulfilled, exerciseAdapter.addOne)
+			.addCase(deleteExercise.fulfilled, exerciseAdapter.removeOne)
+			.addCase(updateExercise.fulfilled, exerciseAdapter.upsertOne);
 	},
 });
 
@@ -77,6 +78,10 @@ export const {
 	selectAll: selectAllExercises,
 	selectById: selectExerciseById,
 	selectIds: selectExerciseIds,
+	selectEntities: selectExerciseEntities,
 } = exerciseAdapter.getSelectors<GlobalStatePart>((state) => state.exercises);
+
+export const selectIsLoading = (state: GlobalStatePart) =>
+	state.exercises.isLoading;
 
 export default exerciseSlice.reducer;

@@ -9,6 +9,7 @@ import {
 	Space,
 	theme,
 	Popconfirm,
+	Spin,
 } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
@@ -17,6 +18,7 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import {
 	deleteWorkout,
 	selectAllWorkouts,
+	selectIsLoading as selectWorkoutsAreLoading,
 } from '../../entities/workout/lib/workout-slice';
 import { Workout } from '../../entities/workout/model';
 
@@ -46,6 +48,7 @@ function WorkoutSearch({ onSearch }: WorkoutSearchProps) {
 }
 
 export default function WorkoutsPage() {
+	const loading = useAppSelector(selectWorkoutsAreLoading);
 	const workouts = useAppSelector(selectAllWorkouts);
 	const dispatch = useAppDispatch();
 	const [filterQuery, setFilterQuery] = useState('');
@@ -53,45 +56,48 @@ export default function WorkoutsPage() {
 		item.title.toLowerCase().includes(filterQuery.toLowerCase())
 	);
 
+	// TODO: Move to i18n messages
 	const text = 'Are you sure to delete this task?';
 	const description = 'Delete the task';
 
 	return (
 		<Row>
 			<Col span={8} offset={8}>
-				<WorkoutSearch onSearch={setFilterQuery} />
-				<Divider />
-				<List
-					size="small"
-					bordered
-					dataSource={filteredData}
-					renderItem={(item: Workout) => (
-						<List.Item key={item._id}>
-							{item.title}
-							<div>
-								<Link to={`/workout/${item._id}`}>
-									<Button type="text">
-										<EditOutlined />
-									</Button>
-								</Link>
-								<Popconfirm
-									placement="topRight"
-									title={text}
-									description={description}
-									onConfirm={() => dispatch(deleteWorkout(item._id))}
-									okText="Yes"
-									cancelText="No"
-								>
-									<Button type="text">
-										<DeleteOutlined
-											style={{ color: theme.defaultConfig.token.colorError }}
-										/>
-									</Button>
-								</Popconfirm>
-							</div>
-						</List.Item>
-					)}
-				/>
+				<Spin spinning={loading}>
+					<WorkoutSearch onSearch={setFilterQuery} />
+					<Divider />
+					<List
+						size="small"
+						bordered
+						dataSource={filteredData}
+						renderItem={(item: Workout) => (
+							<List.Item key={item._id}>
+								{item.title}
+								<div>
+									<Link to={`/workout/${item._id}`}>
+										<Button type="text">
+											<EditOutlined />
+										</Button>
+									</Link>
+									<Popconfirm
+										placement="topRight"
+										title={text}
+										description={description}
+										onConfirm={() => dispatch(deleteWorkout(item._id))}
+										okText="Yes"
+										cancelText="No"
+									>
+										<Button type="text">
+											<DeleteOutlined
+												style={{ color: theme.defaultConfig.token.colorError }}
+											/>
+										</Button>
+									</Popconfirm>
+								</div>
+							</List.Item>
+						)}
+					/>
+				</Spin>
 			</Col>
 		</Row>
 	);

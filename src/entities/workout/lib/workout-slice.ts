@@ -46,17 +46,27 @@ export const updateWorkout = createAsyncThunk(
 	}
 );
 
+const initialState = workoutAdapter.getInitialState({
+	isLoading: true,
+});
+
 interface GlobalStatePart {
-	workouts: ReturnType<typeof workoutAdapter.getInitialState>;
+	workouts: typeof initialState;
 }
 
 export const workoutSlice = createSlice({
 	name: 'workouts',
-	initialState: workoutAdapter.getInitialState(),
+	initialState,
 	reducers: {},
 	extraReducers: (builder) => {
 		builder
-			.addCase(fetchWorkouts.fulfilled, workoutAdapter.setAll)
+			.addCase(fetchWorkouts.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(fetchWorkouts.fulfilled, (state, action) => {
+				state.isLoading = false;
+				workoutAdapter.setAll(state, action.payload);
+			})
 			.addCase(addWorkout.fulfilled, workoutAdapter.addOne)
 			.addCase(deleteWorkout.fulfilled, workoutAdapter.removeOne)
 			.addCase(updateWorkout.fulfilled, workoutAdapter.upsertOne);
@@ -68,5 +78,8 @@ export const {
 	selectById: selectWorkoutById,
 	selectIds: selectWorkoutIds,
 } = workoutAdapter.getSelectors<GlobalStatePart>((state) => state.workouts);
+
+export const selectIsLoading = (state: GlobalStatePart) =>
+	state.workouts.isLoading;
 
 export default workoutSlice.reducer;

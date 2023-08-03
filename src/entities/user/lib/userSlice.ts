@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { User } from '../model';
-import { signIn, getProfile, isAPIAuthenticated } from '../api';
+import { signIn, getProfile } from '../api';
 
 // ---
 
@@ -17,8 +17,8 @@ interface GlobalStatePart {
 
 const initialState: UserState = {
 	user: null,
-	isLoading: false,
-	isAuthenticated: isAPIAuthenticated(),
+	isLoading: true,
+	isAuthenticated: false,
 };
 
 export const getUserProfile = createAsyncThunk(
@@ -48,20 +48,28 @@ const slice = createSlice({
 	initialState,
 	reducers: {},
 	extraReducers: (builder) => {
-		builder.addCase(signInUser.pending, (state) => {
-			state.isLoading = true;
-		});
-		builder.addCase(signInUser.fulfilled, (state) => {
-			state.isAuthenticated = true;
-		});
-		builder.addCase(getUserProfile.fulfilled, (state, action) => {
-			state.isLoading = false;
-			state.user = action.payload;
-		});
+		builder
+			.addCase(signInUser.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(signInUser.fulfilled, (state) => {
+				state.isAuthenticated = true;
+			})
+			.addCase(getUserProfile.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isAuthenticated = true;
+				state.user = action.payload;
+			})
+			.addCase(getUserProfile.rejected, (state) => {
+				state.isLoading = false;
+				state.isAuthenticated = false;
+			});
 	},
 });
 
 export const selectIsAuthenticated = (state: GlobalStatePart) =>
 	state.user.isAuthenticated;
+
+export const selectIsLoading = (state: GlobalStatePart) => state.user.isLoading;
 
 export default slice.reducer;

@@ -2,14 +2,18 @@ import React, { useEffect, useState } from 'react';
 import {
 	Layout,
 	Menu,
-	Row,
-	Col,
 	ConfigProvider,
 	Switch,
 	Image,
 	theme,
+	Select,
 } from 'antd';
-import { UnorderedListOutlined } from '@ant-design/icons';
+import {
+	BuildOutlined,
+	RiseOutlined,
+	UnorderedListOutlined,
+	UserOutlined,
+} from '@ant-design/icons';
 import { Routes, Route, BrowserRouter, useNavigate } from 'react-router-dom';
 
 // Types
@@ -20,14 +24,17 @@ import { useAppDispatch, useAppSelector } from './app/hooks';
 import {
 	getUserProfile,
 	selectIsAuthenticated,
+	selectIsLoading,
 } from './entities/user/lib/userSlice';
 import { I18nProvider, locales } from './app/i18n';
-import AboutPage from './pages/about';
 import AuthPage from './pages/auth';
-import MainPage from './pages/main';
 
 import logo from './app/logo.svg';
 import logoWhite from './app/logo-white.svg';
+import ukrainianFlag from './app/ua-locale.jpg';
+import russianFlag from './app/ru-locale.jpg';
+import greatBritainFlag from './app/en-locale.jpg';
+
 import CategoriesPage from './pages/categories';
 import CategorySinglePage from './pages/category-single';
 import { fetchCategories } from './entities/category/lib/category-slice';
@@ -38,6 +45,10 @@ import ExerciseSinglePage from './pages/exercise-single';
 import ExercisesPage from './pages/exercises';
 import WorkoutSinglePage from './pages/workout-single';
 import WorkoutsPage from './pages/workouts';
+import ClientsPage from './pages/clients';
+import ClientSinglePage from './pages/client-single';
+import { I18nMessage } from './shared/ui/i18n';
+import NotFoundPage from './pages/not-found';
 
 // ---
 
@@ -60,12 +71,19 @@ function prepareItemProps(
 	} as MenuItem;
 }
 
-const localeSequence = [locales.ENGLISH, locales.UKRAINIAN, locales.RUSSIAN];
-
 const items: MenuItem[] = [
-	prepareItemProps('Categories', 1, <UnorderedListOutlined />),
-	prepareItemProps('Exercises', 2, <UnorderedListOutlined />),
-	prepareItemProps('Workouts', 3, <UnorderedListOutlined />),
+	prepareItemProps(<I18nMessage id="Workout.workouts" />, 1, <RiseOutlined />),
+	prepareItemProps(<I18nMessage id="Client.clients" />, 2, <UserOutlined />),
+	prepareItemProps(
+		<I18nMessage id="Exercise.exercises" />,
+		3,
+		<BuildOutlined />
+	),
+	prepareItemProps(
+		<I18nMessage id="Category.categories" />,
+		4,
+		<UnorderedListOutlined />
+	),
 ];
 
 interface ThemeData {
@@ -77,9 +95,10 @@ interface SideBarMenuProps {
 }
 
 const navigation = [
-	{ label: 'Categories', key: 1, target: '/categories' },
-	{ label: 'Exercises', key: 2, target: '/exercises' },
-	{ label: 'Workouts', key: 3, target: '/workouts' },
+	{ label: 'Workouts', key: 1, target: '/workouts' },
+	{ label: 'Clients', key: 2, target: '/clients' },
+	{ label: 'Exercises', key: 3, target: '/exercises' },
+	{ label: 'Categories', key: 4, target: '/categories' },
 ];
 
 const themes: ThemeData = {
@@ -101,7 +120,6 @@ function NavMenu({ menuItems }: SideBarMenuProps) {
 	return (
 		<Menu
 			defaultSelectedKeys={['1']}
-			defaultOpenKeys={['sub1']}
 			theme="dark"
 			mode="horizontal"
 			onClick={handleMenuClick}
@@ -114,8 +132,11 @@ const THEME_STORAGE_KEY = 'theme';
 
 function App() {
 	const isAuthenticated = useAppSelector(selectIsAuthenticated);
+	const isLoading = useAppSelector(selectIsLoading);
 	const dispatch = useAppDispatch();
-	const [locale, setLocale] = useState(locales.UKRAINIAN);
+	const [locale, setLocale] = useState(
+		localStorage.getItem('locale') || locales.UKRAINIAN
+	);
 	const [currentTheme, setTheme] = useState(
 		localStorage.getItem(THEME_STORAGE_KEY) || 'light'
 	);
@@ -125,23 +146,27 @@ function App() {
 		localStorage.setItem(THEME_STORAGE_KEY, checked ? 'dark' : 'light');
 	};
 
-	const changeLocale = () => {
-		const index = localeSequence.indexOf(locale);
-		const nextIndex = index + 1;
-		const nextLocale = localeSequence[nextIndex] || localeSequence[0];
-
-		setLocale(nextLocale);
+	const changeLocale = (selectedLocale: string) => {
+		localStorage.setItem('locale', selectedLocale);
+		setLocale(selectedLocale);
 	};
 
 	useEffect(() => {
-		if (isAuthenticated) {
+		if (!isAuthenticated && isLoading) {
 			dispatch(getUserProfile());
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isAuthenticated, isLoading]);
+
+	useEffect(() => {
+		if (isAuthenticated) {
 			dispatch(fetchCategories());
 			dispatch(fetchExercises());
 			dispatch(fetchClients());
 			dispatch(fetchWorkouts());
 		}
-	});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isAuthenticated]);
 
 	return (
 		<ConfigProvider
@@ -169,9 +194,59 @@ function App() {
 									width="100px"
 									preview={false}
 								/>
-								<NavMenu menuItems={items} />
+								<div
+									style={{ maxWidth: '40em', minWidth: '40em', width: '100%' }}
+								>
+									{isAuthenticated && <NavMenu menuItems={items} />}
+								</div>
 							</div>
-							<div>
+
+							<div
+								style={{ display: 'flex', gap: '0 1em', alignItems: 'center' }}
+							>
+								<div>
+									<Select
+										onChange={changeLocale}
+										defaultValue={locale}
+										style={{ width: '12em' }}
+									>
+										<Select.Option value={locales.UKRAINIAN}>
+											<div className="locale-wrapper">
+												<Image
+													alt="Ukrainian flag"
+													width="2em"
+													preview={false}
+													src={ukrainianFlag}
+												/>
+												<div className="locale-wrapper-text">Українська</div>
+											</div>
+										</Select.Option>
+
+										<Select.Option value={locales.ENGLISH}>
+											<div className="locale-wrapper">
+												<Image
+													alt="Flag of Great Britain"
+													width="2em"
+													preview={false}
+													src={greatBritainFlag}
+												/>
+												<div className="locale-wrapper-text">English</div>
+											</div>
+										</Select.Option>
+
+										<Select.Option value={locales.RUSSIAN}>
+											<div className="locale-wrapper">
+												<Image
+													alt="Flag of opposition to the 2022 Russian invasion of Ukraine"
+													width="2em"
+													preview={false}
+													src={russianFlag}
+												/>
+												<div className="locale-wrapper-text">Русский</div>
+											</div>
+										</Select.Option>
+									</Select>
+								</div>
 								<Switch
 									checkedChildren="Dark"
 									unCheckedChildren="Light"
@@ -187,7 +262,9 @@ function App() {
 									element={
 										<ProtectedRoute
 											navigateTo="/auth"
-											isAuthenticated={isAuthenticated}
+											isAuthenticated={
+												isLoading || (isAuthenticated && !isLoading)
+											}
 										>
 											<CategorySinglePage />
 										</ProtectedRoute>
@@ -198,7 +275,9 @@ function App() {
 									element={
 										<ProtectedRoute
 											navigateTo="/auth"
-											isAuthenticated={isAuthenticated}
+											isAuthenticated={
+												isLoading || (isAuthenticated && !isLoading)
+											}
 										>
 											<CategorySinglePage />
 										</ProtectedRoute>
@@ -209,7 +288,9 @@ function App() {
 									element={
 										<ProtectedRoute
 											navigateTo="/auth"
-											isAuthenticated={isAuthenticated}
+											isAuthenticated={
+												isLoading || (isAuthenticated && !isLoading)
+											}
 										>
 											<ExerciseSinglePage />
 										</ProtectedRoute>
@@ -220,7 +301,9 @@ function App() {
 									element={
 										<ProtectedRoute
 											navigateTo="/auth"
-											isAuthenticated={isAuthenticated}
+											isAuthenticated={
+												isLoading || (isAuthenticated && !isLoading)
+											}
 										>
 											<ExerciseSinglePage />
 										</ProtectedRoute>
@@ -231,18 +314,63 @@ function App() {
 									element={
 										<ProtectedRoute
 											navigateTo="/auth"
-											isAuthenticated={isAuthenticated}
+											isAuthenticated={
+												isLoading || (isAuthenticated && !isLoading)
+											}
 										>
 											<ExercisesPage />
 										</ProtectedRoute>
 									}
 								/>
+
+								<Route
+									path="/client"
+									element={
+										<ProtectedRoute
+											navigateTo="/auth"
+											isAuthenticated={
+												isLoading || (isAuthenticated && !isLoading)
+											}
+										>
+											<ClientSinglePage />
+										</ProtectedRoute>
+									}
+								/>
+								<Route
+									path="/client/:id"
+									element={
+										<ProtectedRoute
+											navigateTo="/auth"
+											isAuthenticated={
+												isLoading || (isAuthenticated && !isLoading)
+											}
+										>
+											<ClientSinglePage />
+										</ProtectedRoute>
+									}
+								/>
+								<Route
+									path="/clients"
+									element={
+										<ProtectedRoute
+											navigateTo="/auth"
+											isAuthenticated={
+												isLoading || (isAuthenticated && !isLoading)
+											}
+										>
+											<ClientsPage />
+										</ProtectedRoute>
+									}
+								/>
+
 								<Route
 									path="/categories"
 									element={
 										<ProtectedRoute
 											navigateTo="/auth"
-											isAuthenticated={isAuthenticated}
+											isAuthenticated={
+												isLoading || (isAuthenticated && !isLoading)
+											}
 										>
 											<CategoriesPage />
 										</ProtectedRoute>
@@ -253,7 +381,9 @@ function App() {
 									element={
 										<ProtectedRoute
 											navigateTo="/auth"
-											isAuthenticated={isAuthenticated}
+											isAuthenticated={
+												isLoading || (isAuthenticated && !isLoading)
+											}
 										>
 											<WorkoutSinglePage />
 										</ProtectedRoute>
@@ -264,7 +394,9 @@ function App() {
 									element={
 										<ProtectedRoute
 											navigateTo="/auth"
-											isAuthenticated={isAuthenticated}
+											isAuthenticated={
+												isLoading || (isAuthenticated && !isLoading)
+											}
 										>
 											<WorkoutSinglePage />
 										</ProtectedRoute>
@@ -275,7 +407,9 @@ function App() {
 									element={
 										<ProtectedRoute
 											navigateTo="/auth"
-											isAuthenticated={isAuthenticated}
+											isAuthenticated={
+												isLoading || (isAuthenticated && !isLoading)
+											}
 										>
 											<WorkoutsPage />
 										</ProtectedRoute>
@@ -286,37 +420,40 @@ function App() {
 									element={
 										<ProtectedRoute
 											navigateTo="/auth"
-											isAuthenticated={isAuthenticated}
+											isAuthenticated={
+												isLoading || (isAuthenticated && !isLoading)
+											}
 										>
-											<Row>
-												<Col span={24}>
-													<MainPage />
-												</Col>
-											</Row>
+											<WorkoutsPage />
 										</ProtectedRoute>
 									}
 								/>
 								<Route
 									path="/auth"
-									element={<AuthPage isAuthenticated={isAuthenticated} />}
+									element={
+										<AuthPage
+											isAuthenticated={
+												isLoading || (isAuthenticated && !isLoading)
+											}
+										/>
+									}
 								/>
 								<Route
-									path="/about"
+									path="*"
 									element={
 										<ProtectedRoute
 											navigateTo="/auth"
-											isAuthenticated={isAuthenticated}
+											isAuthenticated={
+												isLoading || (isAuthenticated && !isLoading)
+											}
 										>
-											<AboutPage
-												onChangeLocale={changeLocale}
-												locale={locale}
-											/>
+											<NotFoundPage />
 										</ProtectedRoute>
 									}
 								/>
 							</Routes>
 						</Content>
-						<Footer>Footer</Footer>
+						<Footer>Fitplannr</Footer>
 					</Layout>
 				</I18nProvider>
 			</BrowserRouter>

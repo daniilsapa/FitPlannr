@@ -1,26 +1,17 @@
 import React, { useState } from 'react';
-import {
-	List,
-	Input,
-	Col,
-	Row,
-	Divider,
-	Tag,
-	Button,
-	Space,
-	theme,
-	Popconfirm,
-} from 'antd';
+import { List, Input, Col, Row, Divider, Tag, Button, Space, Spin } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
-import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { EditOutlined, PlusOutlined } from '@ant-design/icons';
 
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { useAppSelector } from '../../app/hooks';
 import {
-	deleteExercise,
 	selectAllExercises,
+	selectIsLoading as selectExercisesAreLoading,
 } from '../../entities/exercise/lib/exercise-slice';
-
-import { selectCategoryEntities } from '../../entities/category/lib/category-slice';
+import {
+	selectCategoryEntities,
+	selectIsLoading as selectCategoriesAreLoading,
+} from '../../entities/category/lib/category-slice';
 
 // ---
 
@@ -48,9 +39,12 @@ function ExerciseSearch({ onSearch }: ExerciseSearchProps) {
 }
 
 export default function ExercisesPage() {
+	const loading = useAppSelector(
+		(state) =>
+			selectExercisesAreLoading(state) || selectCategoriesAreLoading(state)
+	);
 	const categories = useAppSelector(selectCategoryEntities);
 	const exercises = useAppSelector(selectAllExercises);
-	const dispatch = useAppDispatch();
 	const [filterQuery, setFilterQuery] = useState('');
 	const filteredData = exercises
 		.map(({ _id, ...rest }) => ({ ...rest, id: _id }))
@@ -58,56 +52,44 @@ export default function ExercisesPage() {
 			item.name.toLowerCase().includes(filterQuery.toLowerCase())
 		);
 
-	const text = 'Are you sure to delete this task?';
-	const description = 'Delete the task';
-
 	return (
 		<Row>
 			<Col span={8} offset={8}>
-				<ExerciseSearch onSearch={setFilterQuery} />
-				<Divider />
-				<List
-					size="small"
-					bordered
-					dataSource={filteredData}
-					renderItem={(item) => (
-						<List.Item key={item.id}>
-							<span>{item.name}</span>
+				<Spin spinning={loading}>
+					<ExerciseSearch onSearch={setFilterQuery} />
+					<Divider />
+					<List
+						size="small"
+						bordered
+						dataSource={filteredData}
+						renderItem={(item) => (
+							<List.Item key={item.id}>
+								<span>{item.name}</span>
 
-							<span>
-								{item.categories.map((categoryId) =>
-									typeof categories[categoryId] !== 'undefined' ? (
-										<Tag key={categoryId} color={categories[categoryId]?.color}>
-											{categories[categoryId]?.name}
-										</Tag>
-									) : null
-								)}
-							</span>
+								<span>
+									{item.categories.map((categoryId) =>
+										typeof categories[categoryId] !== 'undefined' ? (
+											<Tag
+												key={categoryId}
+												color={categories[categoryId]?.color}
+											>
+												{categories[categoryId]?.name}
+											</Tag>
+										) : null
+									)}
+								</span>
 
-							<div>
-								<Link to={`/exercise/${item.id}`}>
-									<Button type="text">
-										<EditOutlined />
-									</Button>
-								</Link>
-								<Popconfirm
-									placement="topRight"
-									title={text}
-									description={description}
-									onConfirm={() => dispatch(deleteExercise(item.id))}
-									okText="Yes"
-									cancelText="No"
-								>
-									<Button type="text">
-										<DeleteOutlined
-											style={{ color: theme.defaultConfig.token.colorError }}
-										/>
-									</Button>
-								</Popconfirm>
-							</div>
-						</List.Item>
-					)}
-				/>
+								<div>
+									<Link to={`/exercise/${item.id}`}>
+										<Button type="text">
+											<EditOutlined />
+										</Button>
+									</Link>
+								</div>
+							</List.Item>
+						)}
+					/>
+				</Spin>
 			</Col>
 		</Row>
 	);

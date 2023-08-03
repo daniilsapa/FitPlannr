@@ -2,12 +2,16 @@ export default {
 	'User.signUp': 'Sign up',
 	'User.signIn': 'Sign in',
 	'User.signOut': 'Sign out',
+	'User.next': 'Next',
+	'User.back': 'Back',
 	'User.email': 'Email',
 	'User.password': 'Password',
 	'User.inviteCode': 'Invite code',
 	'User.submit': 'Submit',
 	'User.doNotHaveAccount': "Don't have an account?",
 	'User.alreadyHaveAccount': 'Already have an account?',
+
+	'User.authenticationFailed': 'Authentication failed! Please try again later!',
 
 	'User.validation.email.required': 'Email is required!',
 	'User.validation.email.invalid': 'Please enter a valid email!',
@@ -26,6 +30,7 @@ export default {
 		'At least one special character (e.g. !@#$%^&*)',
 
 	'User.validation.inviteCode.required': 'Invite code is required!',
+	'User.validation.inviteCode.invalid': 'Invite code is not valid!',
 
 	'User.signUp.successTitle': 'You have successfully signed up!',
 	'User.signUp.successSubtitle': 'Please sign in to continue',

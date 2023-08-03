@@ -10,6 +10,7 @@ import axios, {
 const ACCESS_TOKEN_STORAGE_KEY = 'accessToken';
 const AXIOS_CONFIG: AxiosRequestConfig = {
 	baseURL: import.meta.env.VITE_API_BASE_URL,
+	withCredentials: true,
 };
 
 const axiosInstance: AxiosInstance = axios.create(AXIOS_CONFIG);
@@ -31,6 +32,12 @@ axiosInstance.interceptors.request.use(
 		return config;
 	}
 );
+
+export function getGoogleAuthUrl(inviteCode?: string) {
+	return inviteCode
+		? `${import.meta.env.VITE_API_BASE_URL}/auth/google/login?ic=${inviteCode}`
+		: `${import.meta.env.VITE_API_BASE_URL}/auth/google/login`;
+}
 
 export function authenticateAPI(token: string) {
 	localStorage.setItem(ACCESS_TOKEN_STORAGE_KEY, token);

@@ -18,3 +18,7 @@ export function updateWorkout(id: string, workout: Workout) {
 export function deleteWorkout(workoutId: string) {
 	return axiosInstance.delete(`/workouts/${workoutId}`);
 }
+
+export function exportWorkout(workoutId: string) {
+	return axiosInstance.post(`/workouts/${workoutId}/export`);
+}

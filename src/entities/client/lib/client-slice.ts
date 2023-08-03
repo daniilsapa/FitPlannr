@@ -91,11 +91,11 @@ export const updateRecord = createAsyncThunk(
 );
 
 const initialState = clientAdapter.getInitialState({
-	isLoading: false,
+	isLoading: true,
 });
 
 interface GlobalStatePart {
-	clients: ReturnType<typeof clientAdapter.getInitialState>;
+	clients: typeof initialState;
 }
 
 const clientSlice = createSlice({
@@ -159,5 +159,8 @@ export const {
 	selectById: selectClientById,
 	selectIds: selectClientIds,
 } = clientAdapter.getSelectors<GlobalStatePart>((state) => state.clients);
+
+export const selectIsLoading = (state: GlobalStatePart) =>
+	state.clients.isLoading;
 
 export default clientSlice.reducer;

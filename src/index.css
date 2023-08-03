@@ -83,3 +83,17 @@ ul {
 .game-info {
 	margin-left: 20px;
 }
+
+.locale-wrapper {
+	display: flex;
+	width: 100%;
+	max-width: 15em;
+}
+
+.locale-wrapper-text {
+	padding-left: 0.5em;
+}
+
+.locale-wrapper img {
+	border: 1px solid #001529;
+}

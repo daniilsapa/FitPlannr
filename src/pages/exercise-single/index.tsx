@@ -8,9 +8,13 @@ import {
 	updateExercise,
 	addExercise,
 	selectExerciseById,
+	selectIsLoading as selectExercisesAreLoading,
 } from '../../entities/exercise/lib/exercise-slice';
 import { Exercise, NewExercise } from '../../entities/exercise/model';
-import { selectAllCategories } from '../../entities/category/lib/category-slice';
+import {
+	selectAllCategories,
+	selectIsLoading as selectCategoriesAreLoading,
+} from '../../entities/category/lib/category-slice';
 
 // ---
 
@@ -131,13 +135,17 @@ ExerciseAddEditForm.defaultProps = {
 };
 
 export default function ExerciseSinglePage() {
+	const loading = useAppSelector(
+		(state) =>
+			selectExercisesAreLoading(state) || selectCategoriesAreLoading(state)
+	);
 	const { id } = useParams();
 	const stored = useAppSelector((state) =>
 		selectExerciseById(state, id as EntityId)
 	) as Exercise;
 	const dispatch = useAppDispatch();
 	const [isPending, setIsPending] = React.useState(false);
-	const [error, setError] = React.useState('false');
+	const [error, setError] = React.useState('');
 	const initialExercise =
 		id && stored
 			? stored
@@ -165,21 +173,37 @@ export default function ExerciseSinglePage() {
 		setIsPending(false);
 	};
 
+	let render = null;
+
+	if (loading) {
+		render = (
+			<Spin tip="Loading" size="small">
+				<div className="content" />
+			</Spin>
+		);
+	} else if (id && !stored) {
+		render = <Alert type="error" message="Exercise not found" banner />;
+	} else {
+		render = (
+			<ExerciseAddEditForm
+				isPending={isPending}
+				error={error}
+				initialValues={{
+					name: initialExercise.name,
+					description: initialExercise.description,
+					categories: initialExercise.categories,
+					link: initialExercise.link,
+				}}
+				onSubmit={handleSubmit}
+				clearAfterSubmit={!id}
+			/>
+		);
+	}
+
 	return (
 		<Row>
 			<Col span="8" offset="8">
-				<ExerciseAddEditForm
-					isPending={isPending}
-					error={error}
-					initialValues={{
-						name: initialExercise.name,
-						description: initialExercise.description,
-						categories: initialExercise.categories,
-						link: initialExercise.link,
-					}}
-					onSubmit={handleSubmit}
-					clearAfterSubmit={!id}
-				/>
+				{render}
 			</Col>
 		</Row>
 	);

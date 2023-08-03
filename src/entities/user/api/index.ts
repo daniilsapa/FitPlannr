@@ -16,7 +16,7 @@ export function signUp(email: string, password: string, inviteCode: string) {
 }
 
 export function getProfile() {
-	return api.get('/auth/profile');
+	return api.get('/auth/google/profile');
 }
 
 export { isAPIAuthenticated } from '../../../shared/api';

@@ -2,12 +2,17 @@ export default {
 	'User.signUp': 'Зареєструватися',
 	'User.signIn': 'Увійти',
 	'User.signOut': 'Вийти',
+	'User.next': 'Далі',
+	'User.back': 'Назад',
 	'User.email': 'Email',
 	'User.password': 'Пароль',
 	'User.inviteCode': 'Код запрошення',
 	'User.submit': 'Відправити',
 	'User.doNotHaveAccount': 'Немає аккаунта?',
 	'User.alreadyHaveAccount': 'Вже є аккаунт?',
+
+	'User.authenticationFailed':
+		'Аутентифікація не вдалась! Будь ласка, спробуйте ще раз пізніше.',
 
 	'User.validation.email.required': "Email обов'язковий",
 	'User.validation.email.invalid': 'Будь ласка, введіть валідний email',
@@ -26,6 +31,7 @@ export default {
 		'Мінімум один спеціальний символ (наприклад: !@#$%^&*)',
 
 	'User.validation.inviteCode.required': "Код запрошення обов'язковий!",
+	'User.validation.inviteCode.invalid': 'Код запрошення невалідний!',
 
 	'User.signUp.successTitle': 'Ви успішно зареєструвалися!',
 	'User.signUp.successSubtitle': 'Будь ласка, увійдіть щоб продовжити',

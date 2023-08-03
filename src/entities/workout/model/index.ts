@@ -1,4 +1,4 @@
-export type Set = {
+export type PlannedSet = {
 	load: string;
 	repeats: number;
 	tempo: string;
@@ -6,9 +6,9 @@ export type Set = {
 };
 
 export type PlannedExercise = {
-	exerciseId: string;
+	exercise: string;
 	mark: string;
-	sets: Set[];
+	sets: PlannedSet[];
 };
 
 export type Day = {

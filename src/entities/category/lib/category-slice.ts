@@ -48,11 +48,11 @@ export const updateCategory = createAsyncThunk(
 );
 
 const initialState = categoryAdapter.getInitialState({
-	isLoading: false,
+	isLoading: true,
 });
 
 interface GlobalStatePart {
-	categories: ReturnType<typeof categoryAdapter.getInitialState>;
+	categories: typeof initialState;
 }
 
 const categorySlice = createSlice({
@@ -60,26 +60,23 @@ const categorySlice = createSlice({
 	initialState,
 	reducers: {},
 	extraReducers: (builder) => {
-		builder.addCase(fetchCategories.pending, (state) => {
-			state.isLoading = true;
-		});
-
-		builder.addCase(fetchCategories.fulfilled, (state, action) => {
-			state.isLoading = false;
-			categoryAdapter.setAll(state, action.payload);
-		});
-
-		builder.addCase(addCategory.fulfilled, (state, action) => {
-			categoryAdapter.addOne(state, action.payload);
-		});
-
-		builder.addCase(deleteCategory.fulfilled, (state, action) => {
-			categoryAdapter.removeOne(state, action.payload);
-		});
-
-		builder.addCase(updateCategory.fulfilled, (state, action) => {
-			categoryAdapter.upsertOne(state, action.payload);
-		});
+		builder
+			.addCase(fetchCategories.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(fetchCategories.fulfilled, (state, action) => {
+				state.isLoading = false;
+				categoryAdapter.setAll(state, action.payload);
+			})
+			.addCase(addCategory.fulfilled, (state, action) => {
+				categoryAdapter.addOne(state, action.payload);
+			})
+			.addCase(deleteCategory.fulfilled, (state, action) => {
+				categoryAdapter.removeOne(state, action.payload);
+			})
+			.addCase(updateCategory.fulfilled, (state, action) => {
+				categoryAdapter.upsertOne(state, action.payload);
+			});
 	},
 });
 
@@ -91,5 +88,8 @@ export const {
 	selectEntities: selectCategoryEntities,
 	// Pass in a selector that returns the posts slice of state
 } = categoryAdapter.getSelectors((state: GlobalStatePart) => state.categories);
+
+export const selectIsLoading = (state: GlobalStatePart) =>
+	state.categories.isLoading;
 
 export default categorySlice.reducer;

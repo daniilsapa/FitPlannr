@@ -9,25 +9,27 @@ import {
 	Space,
 	theme,
 	Popconfirm,
+	Spin,
 } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import {
-	deleteExercise,
-	selectAllExercises,
-} from '../../entities/exercise/lib/exercise-slice';
+	deleteClient,
+	selectAllClients,
+	selectIsLoading as selectClientsAreLoading,
+} from '../../entities/client/lib/client-slice';
 
 // ---
 
 const { Search } = Input;
 
-interface ExerciseSearchProps {
+interface ClientSearchProps {
 	onSearch: (value: string) => void;
 }
 
-function ExerciseSearch({ onSearch }: ExerciseSearchProps) {
+function ClientSearch({ onSearch }: ClientSearchProps) {
 	const navigate = useNavigate();
 	return (
 		<Space.Compact block size="large">
@@ -37,18 +39,19 @@ function ExerciseSearch({ onSearch }: ExerciseSearchProps) {
 				size="large"
 				onSearch={onSearch}
 			/>
-			<Button onClick={() => navigate('/exercise')}>
+			<Button onClick={() => navigate('/client')}>
 				<PlusOutlined />
 			</Button>
 		</Space.Compact>
 	);
 }
 
-export default function ExercisesPage() {
-	const exercises = useAppSelector(selectAllExercises);
+export default function ClientsPage() {
+	const loading = useAppSelector(selectClientsAreLoading);
+	const clients = useAppSelector(selectAllClients);
 	const dispatch = useAppDispatch();
 	const [filterQuery, setFilterQuery] = useState('');
-	const filteredData = exercises
+	const filteredData = clients
 		.map(({ _id, ...rest }) => ({ ...rest, id: _id }))
 		.filter((item) =>
 			item.name.toLowerCase().includes(filterQuery.toLowerCase())
@@ -60,39 +63,41 @@ export default function ExercisesPage() {
 	return (
 		<Row>
 			<Col span={8} offset={8}>
-				<ExerciseSearch onSearch={setFilterQuery} />
-				<Divider />
-				<List
-					size="small"
-					bordered
-					dataSource={filteredData}
-					renderItem={(item) => (
-						<List.Item key={item.id}>
-							{item.name}
-							<div>
-								<Link to={`/exercise/${item.id}`}>
-									<Button type="text">
-										<EditOutlined />
-									</Button>
-								</Link>
-								<Popconfirm
-									placement="topRight"
-									title={text}
-									description={description}
-									onConfirm={() => dispatch(deleteExercise(item.id))}
-									okText="Yes"
-									cancelText="No"
-								>
-									<Button type="text">
-										<DeleteOutlined
-											style={{ color: theme.defaultConfig.token.colorError }}
-										/>
-									</Button>
-								</Popconfirm>
-							</div>
-						</List.Item>
-					)}
-				/>
+				<Spin spinning={loading}>
+					<ClientSearch onSearch={setFilterQuery} />
+					<Divider />
+					<List
+						size="small"
+						bordered
+						dataSource={filteredData}
+						renderItem={(item) => (
+							<List.Item key={item.id}>
+								{item.name}
+								<div>
+									<Link to={`/client/${item.id}`}>
+										<Button type="text">
+											<EditOutlined />
+										</Button>
+									</Link>
+									<Popconfirm
+										placement="topRight"
+										title={text}
+										description={description}
+										onConfirm={() => dispatch(deleteClient(item.id))}
+										okText="Yes"
+										cancelText="No"
+									>
+										<Button type="text">
+											<DeleteOutlined
+												style={{ color: theme.defaultConfig.token.colorError }}
+											/>
+										</Button>
+									</Popconfirm>
+								</div>
+							</List.Item>
+						)}
+					/>
+				</Spin>
 			</Col>
 		</Row>
 	);

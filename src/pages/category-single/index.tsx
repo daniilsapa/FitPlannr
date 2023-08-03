@@ -9,6 +9,7 @@ import {
 	updateCategory,
 	addCategory,
 	selectCategoryById,
+	selectIsLoading as selectCategoriesAreLoading,
 } from '../../entities/category/lib/category-slice';
 import { Category, NewCategory } from '../../entities/category/model';
 
@@ -105,13 +106,14 @@ CategoryAddEditForm.defaultProps = {
 };
 
 export default function CategorySinglePage() {
+	const loading = useAppSelector(selectCategoriesAreLoading);
 	const { id } = useParams();
 	const stored = useAppSelector((state) =>
 		selectCategoryById(state, id as EntityId)
 	) as Category;
 	const dispatch = useAppDispatch();
 	const [isPending, setIsPending] = React.useState(false);
-	const [error, setError] = React.useState('false');
+	const [error, setError] = React.useState('');
 	const initialCategory = id && stored ? stored : { name: '', color: '#000' };
 
 	const handleSubmit = async (values: CategoryForm) => {
@@ -136,19 +138,35 @@ export default function CategorySinglePage() {
 		setIsPending(false);
 	};
 
+	let render = null;
+
+	if (loading) {
+		render = (
+			<Spin tip="Loading" size="small">
+				<div className="content" />
+			</Spin>
+		);
+	} else if (id && !stored) {
+		render = <Alert type="error" message="Category not found" banner />;
+	} else {
+		render = (
+			<CategoryAddEditForm
+				isPending={isPending}
+				error={error}
+				initialValues={{
+					name: initialCategory.name,
+					color: initialCategory.color,
+				}}
+				onSubmit={handleSubmit}
+				clearAfterSubmit={!id}
+			/>
+		);
+	}
+
 	return (
 		<Row>
 			<Col span="8" offset="8">
-				<CategoryAddEditForm
-					isPending={isPending}
-					error={error}
-					initialValues={{
-						name: initialCategory.name,
-						color: initialCategory.color,
-					}}
-					onSubmit={handleSubmit}
-					clearAfterSubmit={!id}
-				/>
+				{render}
 			</Col>
 		</Row>
 	);

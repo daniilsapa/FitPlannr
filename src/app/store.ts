@@ -7,13 +7,11 @@ import categoryReducer from '../entities/category/lib/category-slice';
 import exerciseReducer from '../entities/exercise/lib/exercise-slice';
 import clientReducer from '../entities/client/lib/client-slice';
 import workoutReducer from '../entities/workout/lib/workout-slice';
-import counterReducer from '../entities/counter';
 
 // ---
 
 const store = configureStore({
 	reducer: {
-		counter: counterReducer,
 		user: userReducer,
 		categories: categoryReducer,
 		exercises: exerciseReducer,
