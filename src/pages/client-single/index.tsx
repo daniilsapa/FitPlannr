@@ -12,6 +12,7 @@ import {
 	Space,
 	Select,
 	InputNumber,
+	Typography,
 } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
@@ -27,6 +28,7 @@ import {
 	selectAllExercises,
 	selectIsLoading as selectExercisesAreLoading,
 } from '../../entities/exercise/lib/exercise-slice';
+import { I18nMessage } from '../../shared/ui/i18n';
 
 // ---
 
@@ -73,7 +75,7 @@ function ClientAddEditForm({
 				{error && <Alert type="error" message={error} banner />}
 
 				<Form.Item
-					label="Name"
+					label={<I18nMessage id="Client.name" />}
 					name="name"
 					rules={[
 						{
@@ -88,7 +90,7 @@ function ClientAddEditForm({
 				</Form.Item>
 
 				<Form.Item
-					label="Description"
+					label={<I18nMessage id="Client.description" />}
 					name="description"
 					rules={[
 						{
@@ -103,6 +105,11 @@ function ClientAddEditForm({
 				<Form.List name="personalRecords">
 					{(fields, { add, remove }) => (
 						<>
+							<div className="ant-col ant-form-item-label css-dev-only-do-not-override-8fxyvw">
+								<Typography.Text>
+									<I18nMessage id="Client.personalRecords" />
+								</Typography.Text>
+							</div>
 							{fields.map(({ key, name }) => (
 								<Space
 									key={key}
@@ -169,7 +176,7 @@ function ClientAddEditForm({
 									block
 									icon={<PlusOutlined />}
 								>
-									Add field
+									<I18nMessage id="Client.addRecord" />
 								</Button>
 							</Form.Item>
 						</>
@@ -178,7 +185,7 @@ function ClientAddEditForm({
 
 				<Form.Item>
 					<Button type="primary" htmlType="submit">
-						Save
+						<I18nMessage id="Common.save" />
 					</Button>
 				</Form.Item>
 			</Form>

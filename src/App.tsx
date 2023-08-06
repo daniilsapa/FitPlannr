@@ -248,8 +248,8 @@ function App() {
 									</Select>
 								</div>
 								<Switch
-									checkedChildren="Dark"
-									unCheckedChildren="Light"
+									checkedChildren="🌙"
+									unCheckedChildren="☀️"
 									defaultChecked={currentTheme === 'dark'}
 									onChange={handleThemeChange}
 								/>

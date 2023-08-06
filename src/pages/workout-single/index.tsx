@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { EntityId } from '@reduxjs/toolkit';
 import {
@@ -34,6 +34,7 @@ import {
 } from '@ant-design/icons';
 import { ColumnsType } from 'antd/es/table';
 import { SortOrder } from 'antd/es/table/interface';
+import { useIntl } from 'react-intl';
 
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 
@@ -75,6 +76,7 @@ import { exportWorkout } from '../../entities/workout/api';
 
 // Styles
 import './index.css';
+import { I18nMessage } from '../../shared/ui/i18n';
 
 // ---
 const MIN_TITLE_LENGTH = 3;
@@ -283,7 +285,7 @@ function ExerciseForm({ name, remove, formFieldValues }: ExerciseFormProps) {
 						))}
 
 						<div>
-							Avg. load:{' '}
+							<I18nMessage id="Workout.averageLoad" />:{' '}
 							{formFieldValues
 								? (
 										formFieldValues.sets.reduce(
@@ -310,7 +312,7 @@ function ExerciseForm({ name, remove, formFieldValues }: ExerciseFormProps) {
 							onClick={() => add()}
 							icon={<PlusOutlined />}
 						>
-							Add a set
+							<I18nMessage id="Workout.addSet" />
 						</Button>
 					</>
 				)}
@@ -327,12 +329,16 @@ interface DayTitleFormProps {
 }
 
 function DayTitleForm({ name, index, remove }: DayTitleFormProps) {
+	const intl = useIntl();
+
 	return (
 		<div style={{ display: 'flex' }}>
 			<Space.Compact onClick={(e) => e.stopPropagation()}>
 				<Form.Item
 					name={[name, 'dayTitle']}
-					initialValue={`Day ${index + 1}`}
+					initialValue={`${intl.formatMessage({ id: 'Workout.day' })} ${
+						index + 1
+					}`}
 					rules={[
 						{
 							required: true,
@@ -386,7 +392,7 @@ function DayForm({ name, formFieldValues }: DayFormProps) {
 						block
 						icon={<PlusOutlined />}
 					>
-						Add exercises
+						<I18nMessage id="Workout.addExercise" />
 					</Button>
 				</>
 			)}
@@ -417,6 +423,8 @@ function WeekForm({
 		setOpen(newOpen);
 	};
 
+	const intl = useIntl();
+
 	return (
 		<Col span={12}>
 			<Card
@@ -425,7 +433,9 @@ function WeekForm({
 						<Form.Item
 							name={[field.name, 'weekTitle']}
 							style={{ marginBottom: 0 }}
-							initialValue={`Week ${index + 1}`}
+							initialValue={`${intl.formatMessage({ id: 'Workout.week' })} ${
+								index + 1
+							}`}
 							rules={[
 								{
 									required: true,
@@ -453,11 +463,15 @@ function WeekForm({
 						<Popover
 							content={
 								<div>
-									<Button onClick={onApplyToTheNext}>Apply to the next</Button>
-									<Button onClick={onApplyToAll}>Apply to all</Button>
+									<Button onClick={onApplyToTheNext}>
+										<I18nMessage id="Workout.form.applyToTheNextOne" />
+									</Button>
+									<Button onClick={onApplyToAll}>
+										<I18nMessage id="Workout.form.applyToAll" />
+									</Button>
 								</div>
 							}
-							title="Title"
+							title={<I18nMessage id="Workout.form.transferSettingsTitle" />}
 							trigger="click"
 							open={open}
 							onOpenChange={handleOpenChange}
@@ -476,7 +490,9 @@ function WeekForm({
 						>
 							<Tooltip
 								placement="topLeft"
-								title="Select this entity for load calculation"
+								title={
+									<I18nMessage id="Workout.form.selectForLoadCalculation" />
+								}
 							>
 								<Form.Item name={[field.name, 'focused']} style={{ margin: 0 }}>
 									<Checkbox />
@@ -504,7 +520,9 @@ function WeekForm({
 											<div>
 												<Tooltip
 													placement="topLeft"
-													title="Select this entity for load calculation"
+													title={
+														<I18nMessage id="Workout.form.selectForLoadCalculation" />
+													}
 												>
 													<Form.Item
 														name={[name, 'focused']}
@@ -534,7 +552,7 @@ function WeekForm({
 									block
 									icon={<PlusOutlined />}
 								>
-									Add days
+									<I18nMessage id="Workout.addDay" />
 								</Button>
 							</>
 						)}
@@ -592,7 +610,7 @@ function calculateLoad(
 		});
 	});
 
-	return categoryMetas;
+	return categoryMetasCopy;
 }
 
 interface LoadCalculatorProps {
@@ -647,7 +665,6 @@ function LoadCalculator({ categories, exercises, plan }: LoadCalculatorProps) {
 		Object.values(categories)
 	);
 	const categoryMetas = calculateLoad(categoryToMetaData, exercises, plan);
-
 	const items: CategoryWithMetaAndDisabled[] = Object.entries(categoryMetas)
 		.map(
 			([categoryId, categoryMeta]): CategoryWithMetaAndDisabled => ({
@@ -674,7 +691,7 @@ function LoadCalculator({ categories, exercises, plan }: LoadCalculatorProps) {
 
 	const columns: ColumnsType<CategoryWithMetaAndDisabled> = [
 		{
-			title: 'Category',
+			title: <I18nMessage id="Category.category" />,
 			dataIndex: 'name',
 			render: (text, record: Category) => (
 				<Space>
@@ -683,7 +700,7 @@ function LoadCalculator({ categories, exercises, plan }: LoadCalculatorProps) {
 			),
 		},
 		{
-			title: 'NOL',
+			title: <I18nMessage id="Workout.numberOfLiftsAbbr" />,
 			dataIndex: 'meta',
 			defaultSortOrder: 'descend',
 			render: (meta) => meta.numberOfLifts,
@@ -695,7 +712,7 @@ function LoadCalculator({ categories, exercises, plan }: LoadCalculatorProps) {
 				),
 		},
 		{
-			title: 'Tonnage',
+			title: <I18nMessage id="Workout.tonnage" />,
 			dataIndex: 'meta',
 			render: (meta) => meta.tonnage,
 			sorter: (aCat, bCat, sortOrder) =>
@@ -706,7 +723,7 @@ function LoadCalculator({ categories, exercises, plan }: LoadCalculatorProps) {
 				),
 		},
 		{
-			title: 'Disabled',
+			title: <I18nMessage id="Common.disabledAbbr" />,
 			dataIndex: '_id',
 			render: (_, category) => (
 				<Space>
@@ -723,7 +740,11 @@ function LoadCalculator({ categories, exercises, plan }: LoadCalculatorProps) {
 		<Table
 			bordered
 			size="small"
-			title={() => 'Load Calculator'}
+			caption={
+				<h3>
+					<I18nMessage id="Workout.loadCalculator" />
+				</h3>
+			}
 			showHeader
 			pagination={false}
 			scroll={{ y: 405 }}
@@ -793,8 +814,8 @@ function WorkoutAddEditForm({
 	>;
 	const clients = useAppSelector(selectAllClients);
 	const [state, setState] = useState<FormWeek[]>([]);
-
 	const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
+	const intl = useIntl();
 
 	const [form] = Form.useForm();
 
@@ -807,11 +828,6 @@ function WorkoutAddEditForm({
 
 	const handleClientChange = (clientId: string) => {
 		setSelectedClientId(clientId);
-	};
-
-	const handleDuplicate = () => {
-		form.setFieldValue('title', `${form.getFieldValue('title')} (copy)`);
-		onDuplicate();
 	};
 
 	const turnLoadPercentsIntoAbsoluteNumber = (formValues: {
@@ -901,6 +917,31 @@ function WorkoutAddEditForm({
 		setState(newState);
 	};
 
+	useEffect(() => {
+		handleValuesChange(null, { plan: form.getFieldsValue().plan });
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	const handleExport = () => {
+		form.validateFields().then(async (values) => {
+			await onSubmit(values);
+			await onExport();
+		});
+	};
+
+	const handleDuplicate = () => {
+		form.validateFields().then(async (values) => {
+			await onSubmit(values);
+			form.setFieldValue(
+				'title',
+				`${form.getFieldValue('title')} (${intl.formatMessage({
+					id: 'Common.copy',
+				})})`
+			);
+			await onDuplicate();
+		});
+	};
+
 	const omit = (obj: Record<string, unknown>, omitKey: string) => {
 		return Object.keys(obj).reduce((result, key) => {
 			if (key !== omitKey) {
@@ -948,7 +989,7 @@ function WorkoutAddEditForm({
 	};
 
 	return (
-		<Spin spinning={isPending} delay={200}>
+		<Spin spinning={isPending}>
 			<Form
 				form={form}
 				initialValues={initialValues}
@@ -956,18 +997,49 @@ function WorkoutAddEditForm({
 				onValuesChange={handleValuesChange}
 				validateTrigger="onSubmit"
 				layout="vertical"
+				scrollToFirstError
 			>
 				<div style={{ margin: '0 2em' }}>
 					{error && <Alert type="error" message={error} banner />}
+
+					<Row>
+						<Col span="10" offset="7">
+							<Space
+								direction="horizontal"
+								style={{ width: '100%', justifyContent: 'center' }}
+							>
+								<Form.Item>
+									<Button type="default" block onClick={handleExport}>
+										<GoogleOutlined />{' '}
+										<I18nMessage id="Workout.form.saveAndExport" />
+									</Button>
+								</Form.Item>
+
+								<Form.Item>
+									<Button type="default" block onClick={handleDuplicate}>
+										<CopyOutlined />{' '}
+										<I18nMessage id="Workout.form.saveAndDuplicate" />
+									</Button>
+								</Form.Item>
+
+								<Form.Item>
+									<Button block htmlType="submit">
+										<SaveOutlined /> <I18nMessage id="Workout.form.save" />
+									</Button>
+								</Form.Item>
+							</Space>
+						</Col>
+					</Row>
 
 					<Row gutter={16}>
 						<Col span="4" offset="4">
 							<div style={{ padding: '0 0 0 4.2em' }}>
 								<Form.Item
-									label="Client"
+									label={<I18nMessage id="Client.client" />}
 									tooltip={{
-										title:
-											'Select current client to use % of their personal record in an exercise when setting load',
+										title: (
+											<I18nMessage id="Workout.form.selectClientTooltip" />
+										),
 										icon: <QuestionCircleOutlined />,
 										placement: 'topLeft',
 									}}
@@ -990,7 +1062,7 @@ function WorkoutAddEditForm({
 
 						<Col span="8">
 							<Form.Item
-								label="Title"
+								label={<I18nMessage id="Workout.title" />}
 								name="title"
 								rules={[
 									{
@@ -1007,11 +1079,11 @@ function WorkoutAddEditForm({
 									},
 								]}
 							>
-								<Input />
+								<Input showCount maxLength={MAX_TITLE_LENGTH} />
 							</Form.Item>
 
 							<Form.Item
-								label="Description"
+								label={<I18nMessage id="Workout.description" />}
 								name="description"
 								rules={[
 									{
@@ -1022,32 +1094,6 @@ function WorkoutAddEditForm({
 							>
 								<Input.TextArea showCount maxLength={MAX_DESCRIPTION_LENGTH} />
 							</Form.Item>
-						</Col>
-
-						<Col span="6">
-							<div
-								style={{
-									margin: '2.3em 0 0 0',
-								}}
-							>
-								<Form.Item>
-									<Button type="default" block onClick={onExport}>
-										<GoogleOutlined /> Save & Export to Google Sheets
-									</Button>
-								</Form.Item>
-
-								<Form.Item>
-									<Button type="default" block onClick={handleDuplicate}>
-										<CopyOutlined /> Save & Duplicate workout
-									</Button>
-								</Form.Item>
-
-								<Form.Item>
-									<Button block htmlType="submit">
-										<SaveOutlined /> Save
-									</Button>
-								</Form.Item>
-							</div>
 						</Col>
 					</Row>
 				</div>
@@ -1084,7 +1130,7 @@ function WorkoutAddEditForm({
 														style={{ height: '405px' }}
 														icon={<PlusOutlined />}
 													>
-														Add another week
+														<I18nMessage id="Workout.addWeek" />
 													</Button>
 												</Form.Item>
 											</Col>

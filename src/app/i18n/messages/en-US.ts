@@ -6,16 +6,17 @@ import exerciseMessages from '../../../entities/exercise/i18n/messages/en-US';
 import userMessages from '../../../entities/user/i18n/messages/en-US';
 import workoutMessages from '../../../entities/workout/i18n/messages/en-US';
 
+import commonMessages from '../../../shared/i18n/messages/en-US';
+
 // ---
 
 export default {
 	[locales.ENGLISH]: {
-		learn: 'Learn React',
-		edit: 'Edit {path} and save to reload.',
 		...categoryMessages,
 		...clientMessages,
 		...exerciseMessages,
 		...userMessages,
 		...workoutMessages,
+		...commonMessages,
 	},
 };

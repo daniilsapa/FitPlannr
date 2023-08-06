@@ -12,6 +12,7 @@ import {
 	selectIsLoading as selectCategoriesAreLoading,
 } from '../../entities/category/lib/category-slice';
 import { Category, NewCategory } from '../../entities/category/model';
+import { I18nMessage } from '../../shared/ui/i18n';
 
 // ---
 
@@ -68,7 +69,7 @@ function CategoryAddEditForm({
 				{error && <Alert type="error" message={error} banner />}
 
 				<Form.Item
-					label="Category name"
+					label={<I18nMessage id="Category.name" />}
 					name="name"
 					rules={[
 						{
@@ -83,7 +84,7 @@ function CategoryAddEditForm({
 				</Form.Item>
 
 				<Form.Item
-					label="Category color"
+					label={<I18nMessage id="Category.color" />}
 					name="color"
 					rules={[{ required: true, message: 'Please select a color' }]}
 				>
@@ -92,7 +93,7 @@ function CategoryAddEditForm({
 
 				<Form.Item>
 					<Button type="primary" htmlType="submit">
-						Save
+						<I18nMessage id="Common.save" />
 					</Button>
 				</Form.Item>
 			</Form>

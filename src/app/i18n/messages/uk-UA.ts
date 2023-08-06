@@ -6,16 +6,17 @@ import exerciseMessages from '../../../entities/exercise/i18n/messages/uk-UA';
 import userMessages from '../../../entities/user/i18n/messages/uk-UA';
 import workoutMessages from '../../../entities/workout/i18n/messages/uk-UA';
 
+import commonMessages from '../../../shared/i18n/messages/uk-UA';
+
 // ---
 
 export default {
 	[locales.UKRAINIAN]: {
-		learn: 'Вивчаємо React',
-		edit: 'Відредагуйте {path} і збережіть для перезавантаження.',
 		...categoryMessages,
 		...clientMessages,
 		...exerciseMessages,
 		...userMessages,
 		...workoutMessages,
+		...commonMessages,
 	},
 };

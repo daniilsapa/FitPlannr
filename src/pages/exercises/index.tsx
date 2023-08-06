@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { List, Input, Col, Row, Divider, Tag, Button, Space, Spin } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { useIntl } from 'react-intl';
 
 import { useAppSelector } from '../../app/hooks';
 import {
@@ -23,10 +24,12 @@ interface ExerciseSearchProps {
 
 function ExerciseSearch({ onSearch }: ExerciseSearchProps) {
 	const navigate = useNavigate();
+	const intl = useIntl();
+
 	return (
 		<Space.Compact block size="large">
 			<Search
-				placeholder="Start typing to search..."
+				placeholder={intl.formatMessage({ id: 'Common.startTypingToSearch' })}
 				allowClear
 				size="large"
 				onSearch={onSearch}

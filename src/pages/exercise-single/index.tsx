@@ -15,6 +15,7 @@ import {
 	selectAllCategories,
 	selectIsLoading as selectCategoriesAreLoading,
 } from '../../entities/category/lib/category-slice';
+import { I18nMessage } from '../../shared/ui/i18n';
 
 // ---
 
@@ -62,7 +63,7 @@ function ExerciseAddEditForm({
 				{error && <Alert type="error" message={error} banner />}
 
 				<Form.Item
-					label="Name"
+					label={<I18nMessage id="Exercise.name" />}
 					name="name"
 					rules={[
 						{
@@ -77,7 +78,7 @@ function ExerciseAddEditForm({
 				</Form.Item>
 
 				<Form.Item
-					label="Description"
+					label={<I18nMessage id="Exercise.description" />}
 					name="description"
 					rules={[
 						{
@@ -89,7 +90,10 @@ function ExerciseAddEditForm({
 					<Input.TextArea />
 				</Form.Item>
 
-				<Form.Item name="categories" label="Categories">
+				<Form.Item
+					name="categories"
+					label={<I18nMessage id="Category.categories" />}
+				>
 					<Select mode="multiple">
 						{allCategories.map((category) => (
 							<Select.Option key={category._id} value={category._id}>
@@ -102,7 +106,7 @@ function ExerciseAddEditForm({
 				</Form.Item>
 
 				<Form.Item
-					label="Link"
+					label={<I18nMessage id="Exercise.link" />}
 					name="link"
 					rules={[
 						{
@@ -121,7 +125,7 @@ function ExerciseAddEditForm({
 
 				<Form.Item>
 					<Button type="primary" htmlType="submit">
-						Save
+						<I18nMessage id="Common.save" />
 					</Button>
 				</Form.Item>
 			</Form>
