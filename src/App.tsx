@@ -27,6 +27,9 @@ import {
 	selectIsLoading,
 } from './entities/user/lib/userSlice';
 import { I18nProvider, locales } from './app/i18n';
+
+// UI
+import UnderConstructionPlug from './app/ui/UnderConstructionPlug';
 import AuthPage from './pages/auth';
 
 import logo from './app/logo.svg';
@@ -52,7 +55,7 @@ import NotFoundPage from './pages/not-found';
 
 // ---
 
-const { Header, Footer, Content } = Layout;
+const { Header, Content } = Layout;
 type MenuItem = Required<MenuProps>['items'][number];
 
 function prepareItemProps(
@@ -179,6 +182,8 @@ function App() {
 		>
 			<BrowserRouter>
 				<I18nProvider locale={locale}>
+					<UnderConstructionPlug />
+
 					<Layout style={{ minHeight: '100vh' }}>
 						<Header
 							style={{
@@ -453,7 +458,6 @@ function App() {
 								/>
 							</Routes>
 						</Content>
-						<Footer>Fitplannr</Footer>
 					</Layout>
 				</I18nProvider>
 			</BrowserRouter>

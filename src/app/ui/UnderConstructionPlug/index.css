@@ -1,0 +1,24 @@
+.under-construction {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 999;
+	display: none;
+	width: 100%;
+	height: 100%;
+}
+
+.under-construction-container {
+	width: 75%;
+	margin: 0 auto;
+}
+
+.under-construction-inner > * + * {
+	margin-top: 3em;
+}
+
+@media screen and (width <= 1439px) {
+	.under-construction {
+		display: block;
+	}
+}

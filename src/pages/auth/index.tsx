@@ -20,17 +20,15 @@ export default function AuthPage({ isAuthenticated }: AuthPageProps) {
 
 	return (
 		<div className="auth-page">
-			<main className="auth-page-inner">
+			<div>
 				<div>
-					<div>
-						{isSignIn ? (
-							<GoogleSignInForm switchToSignUp={() => setIsSignIn(false)} />
-						) : (
-							<GoogleSignUpForm switchToSignIn={() => setIsSignIn(true)} />
-						)}
-					</div>
+					{isSignIn ? (
+						<GoogleSignInForm switchToSignUp={() => setIsSignIn(false)} />
+					) : (
+						<GoogleSignUpForm switchToSignIn={() => setIsSignIn(true)} />
+					)}
 				</div>
-			</main>
+			</div>
 		</div>
 	);
 }

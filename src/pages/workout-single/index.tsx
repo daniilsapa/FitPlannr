@@ -1032,8 +1032,8 @@ function WorkoutAddEditForm({
 					</Row>
 
 					<Row gutter={16}>
-						<Col span="4" offset="4">
-							<div style={{ padding: '0 0 0 4.2em' }}>
+						<Col span="3" offset="5">
+							<div>
 								<Form.Item
 									label={<I18nMessage id="Client.client" />}
 									tooltip={{
@@ -1047,7 +1047,7 @@ function WorkoutAddEditForm({
 									<Select
 										size="small"
 										showSearch
-										style={{ width: 200 }}
+										style={{ width: '100%' }}
 										onChange={handleClientChange}
 									>
 										{clients.map((client) => (

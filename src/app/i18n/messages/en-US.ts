@@ -12,6 +12,9 @@ import commonMessages from '../../../shared/i18n/messages/en-US';
 
 export default {
 	[locales.ENGLISH]: {
+		'App.pageIsUnderConstruction': 'This page is under construction',
+		'App.screenIsTooSmallDescription':
+			'Sorry, this page is not yet optimized for your screen size 😞. Please use a larger screen...',
 		...categoryMessages,
 		...clientMessages,
 		...exerciseMessages,

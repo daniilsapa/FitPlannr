@@ -41,8 +41,7 @@ export default function GoogleSignInForm({ switchToSignUp }: SignInFormProps) {
 						}
 					}, 1000);
 					window.addEventListener('message', (event) => {
-						// TODO: hardcoded origin
-						if (event.origin !== 'http://localhost:3000') return;
+						if (event.origin !== import.meta.env.VITE_API_ORIGIN) return;
 
 						if (event.data === 'authentication:success') {
 							resolve(true);
@@ -97,8 +96,10 @@ export default function GoogleSignInForm({ switchToSignUp }: SignInFormProps) {
 					</Form.Item>
 				</Form>
 
-				<div>
-					<I18nMessage id="User.alreadyHaveAccount" />
+				<div style={{ margin: '2em 0 0' }}>
+					<Typography.Text>
+						<I18nMessage id="User.doNotHaveAccount" />
+					</Typography.Text>
 					<Button type="link" onClick={switchToSignUp}>
 						<I18nMessage id="User.signUp" />
 					</Button>

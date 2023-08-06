@@ -192,8 +192,10 @@ export default function GoogleSignUpForm({ switchToSignIn }: SignUpFormProps) {
 					</Form>
 				)}
 
-				<div>
-					<I18nMessage id="User.alreadyHaveAccount" />
+				<div style={{ margin: '2em 0 0' }}>
+					<Typography.Text>
+						<I18nMessage id="User.alreadyHaveAccount" />
+					</Typography.Text>
 					<Button type="link" onClick={switchToSignIn}>
 						<I18nMessage id="User.signIn" />
 					</Button>
