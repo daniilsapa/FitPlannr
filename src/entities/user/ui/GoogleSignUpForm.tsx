@@ -64,14 +64,12 @@ export default function GoogleSignUpForm({ switchToSignIn }: SignUpFormProps) {
 							reject();
 						}
 					}, 1000);
+
 					window.addEventListener('message', (event) => {
 						if (event.data === 'authentication:success') {
 							resolve(true);
-						} else {
-							reject();
+							clearInterval(interval);
 						}
-
-						clearInterval(interval);
 					});
 				});
 
