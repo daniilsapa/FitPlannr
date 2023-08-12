@@ -5,4 +5,5 @@ export default {
 	'Exercise.name': 'Name',
 	'Exercise.description': 'Description',
 	'Exercise.link': 'Link',
+	'Exercise.selectExercise': 'Select exercise',
 };

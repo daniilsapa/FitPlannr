@@ -29,6 +29,9 @@ export default {
 	'Workout.averageLoad': 'Avg. load',
 	'Workout.numberOfLiftsAbbr': 'NoL',
 	'Workout.numberOfLifts': 'Number of lifts',
+	'Workout.exerciseMark': 'Mark',
+	'Workout.validation.exerciseMarkMaxLength':
+		'Mark must be max {maxLength} characters long',
 
 	'Workout.tonnage': 'Tonnage',
 

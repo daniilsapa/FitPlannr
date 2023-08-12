@@ -29,6 +29,9 @@ export default {
 	'Workout.averageLoad': 'Середнє навантаження',
 	'Workout.numberOfLiftsAbbr': 'КПШ',
 	'Workout.numberOfLifts': 'Кількість підйомів штанги',
+	'Workout.exerciseMark': 'Позначка',
+	'Workout.validation.exerciseMarkMaxLength':
+		'Максимальна довжина позначки - {maxLength}',
 
 	'Workout.tonnage': 'Тоннаж',
 

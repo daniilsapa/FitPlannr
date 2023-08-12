@@ -29,6 +29,9 @@ export default {
 	'Workout.averageLoad': 'Средняя нагрузка',
 	'Workout.numberOfLiftsAbbr': 'КПШ',
 	'Workout.numberOfLifts': 'Количество подъемов штанги',
+	'Workout.exerciseMark': 'Помeтка',
+	'Workout.validation.exerciseMarkMaxLength':
+		'Максимальная длина помeтка - {maxLength}',
 
 	'Workout.tonnage': 'Тоннаж',
 

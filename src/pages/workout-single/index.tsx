@@ -63,6 +63,7 @@ import {
 	selectIsLoading as selectExercisesAreLoading,
 } from '../../entities/exercise/lib/exercise-slice';
 import {
+	selectAllCategories,
 	selectCategoryEntities,
 	selectIsLoading as selectCategoriesAreLoading,
 } from '../../entities/category/lib/category-slice';
@@ -215,7 +216,20 @@ interface ExerciseFormProps {
 }
 
 function ExerciseForm({ name, remove, formFieldValues }: ExerciseFormProps) {
+	const intl = useIntl();
 	const exercises = useAppSelector(selectAllExercises);
+	const categories = useAppSelector(selectAllCategories);
+
+	const [categoryToFilterExercises, setCategoryToFilterExercises] =
+		useState<string>('');
+
+	const handleSelectCategory = (value: string) => {
+		setCategoryToFilterExercises(value);
+	};
+
+	const defaultCategory: Category = { _id: '', name: 'All', color: '#000000' };
+
+	const categoriesToChooseFrom = [defaultCategory, ...categories];
 
 	return (
 		<div>
@@ -227,11 +241,22 @@ function ExerciseForm({ name, remove, formFieldValues }: ExerciseFormProps) {
 						rules={[
 							{
 								max: MAX_MARK_LENGTH,
-								message: `Name must be max ${MAX_MARK_LENGTH} characters long`,
+								message: intl.formatMessage(
+									{
+										id: 'Workout.validation.exerciseMarkMaxLength',
+									},
+									{ maxLength: MAX_MARK_LENGTH }
+								),
 							},
 						]}
 					>
-						<Input size="small" placeholder="Mark" style={{ width: 100 }} />
+						<Input
+							size="small"
+							placeholder={intl.formatMessage({
+								id: 'Workout.exerciseMark',
+							})}
+							style={{ width: 100 }}
+						/>
 					</Form.Item>
 
 					<Form.Item
@@ -244,16 +269,74 @@ function ExerciseForm({ name, remove, formFieldValues }: ExerciseFormProps) {
 							},
 						]}
 					>
-						<Select size="small" showSearch style={{ width: 200 }}>
-							{exercises.map((exercise) => (
-								<Select.Option key={exercise._id} value={exercise._id}>
-									{exercise.name}
-								</Select.Option>
-							))}
-						</Select>
+						<Select
+							filterOption={(input, option) => {
+								if (!option) {
+									return false;
+								}
+
+								if (!option.categories.includes(categoryToFilterExercises)) {
+									return false;
+								}
+
+								if (option.label) {
+									return (
+										option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
+									);
+								}
+
+								return false;
+							}}
+							size="small"
+							placeholder={intl.formatMessage({
+								id: 'Exercise.selectExercise',
+							})}
+							showSearch
+							style={{ width: 200 }}
+							options={exercises
+								.filter((exercise) =>
+									categoryToFilterExercises
+										? exercise.categories.includes(categoryToFilterExercises)
+										: true
+								)
+								.map((exercise) => ({
+									label: exercise.name,
+									value: exercise._id,
+									categories: exercise.categories,
+								}))}
+						/>
 					</Form.Item>
 
-					<Button size="small" onClick={() => remove(name)}>
+					<Select
+						onSelect={handleSelectCategory}
+						showSearch
+						defaultValue={defaultCategory._id}
+						filterOption={(input, option) => {
+							if (!option) {
+								return false;
+							}
+
+							if (option.label) {
+								return (
+									option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
+								);
+							}
+
+							return false;
+						}}
+						style={{ width: 120, marginBottom: '8px' }}
+						size="small"
+						options={categoriesToChooseFrom.map((category) => ({
+							label: category.name,
+							value: category._id,
+						}))}
+					/>
+
+					<Button
+						style={{ marginBottom: '8px' }}
+						size="small"
+						onClick={() => remove(name)}
+					>
 						<DeleteOutlined />
 					</Button>
 				</Space>
