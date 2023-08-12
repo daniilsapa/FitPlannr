@@ -19,4 +19,8 @@ export function getProfile() {
 	return api.get('/auth/google/profile');
 }
 
+export function logOut() {
+	return api.post('/auth/google/logout');
+}
+
 export { isAPIAuthenticated } from '../../../shared/api';

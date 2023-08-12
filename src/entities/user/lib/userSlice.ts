@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { User } from '../model';
-import { signIn, getProfile } from '../api';
+import { signIn, logOut, getProfile } from '../api';
 
 // ---
 
@@ -29,6 +29,10 @@ export const getUserProfile = createAsyncThunk(
 	}
 );
 
+export const signOutUser = createAsyncThunk('user/signOut', async () => {
+	await logOut();
+});
+
 export const signInUser = createAsyncThunk(
 	'user/signIn',
 	async (
@@ -54,6 +58,9 @@ const slice = createSlice({
 			})
 			.addCase(signInUser.fulfilled, (state) => {
 				state.isAuthenticated = true;
+			})
+			.addCase(signOutUser.fulfilled, (state) => {
+				state.isAuthenticated = false;
 			})
 			.addCase(getUserProfile.fulfilled, (state, action) => {
 				state.isLoading = false;

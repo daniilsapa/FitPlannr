@@ -31,13 +31,7 @@ import { I18nProvider, locales } from './app/i18n';
 // UI
 import UnderConstructionPlug from './app/ui/UnderConstructionPlug';
 import AuthPage from './pages/auth';
-
-import logo from './app/logo.svg';
-import logoWhite from './app/logo-white.svg';
-import ukrainianFlag from './app/ua-locale.jpg';
-import russianFlag from './app/ru-locale.jpg';
-import greatBritainFlag from './app/en-locale.jpg';
-
+import LogOutButton from './entities/user/ui/LogOutButton';
 import CategoriesPage from './pages/categories';
 import CategorySinglePage from './pages/category-single';
 import { fetchCategories } from './entities/category/lib/category-slice';
@@ -52,6 +46,12 @@ import ClientsPage from './pages/clients';
 import ClientSinglePage from './pages/client-single';
 import { I18nMessage } from './shared/ui/i18n';
 import NotFoundPage from './pages/not-found';
+
+import logo from './app/logo.svg';
+import logoWhite from './app/logo-white.svg';
+import ukrainianFlag from './app/ua-locale.jpg';
+import russianFlag from './app/ru-locale.jpg';
+import greatBritainFlag from './app/en-locale.jpg';
 
 // ---
 
@@ -209,6 +209,8 @@ function App() {
 							<div
 								style={{ display: 'flex', gap: '0 1em', alignItems: 'center' }}
 							>
+								<div>{isAuthenticated && <LogOutButton />}</div>
+
 								<div>
 									<Select
 										onChange={changeLocale}
