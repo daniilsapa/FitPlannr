@@ -47,6 +47,13 @@ export const updateExercise = createAsyncThunk(
 	}
 );
 
+export const removeCategoryFromExercises = createAsyncThunk(
+	'exercises/removeCategoryFromExercises',
+	async (categoryId: string) => {
+		return categoryId;
+	}
+);
+
 const initialState = exerciseAdapter.getInitialState({
 	isLoading: true,
 });
@@ -70,7 +77,19 @@ const exerciseSlice = createSlice({
 			})
 			.addCase(addExercise.fulfilled, exerciseAdapter.addOne)
 			.addCase(deleteExercise.fulfilled, exerciseAdapter.removeOne)
-			.addCase(updateExercise.fulfilled, exerciseAdapter.upsertOne);
+			.addCase(updateExercise.fulfilled, exerciseAdapter.upsertOne)
+			.addCase(removeCategoryFromExercises.fulfilled, (state, action) => {
+				const categoryId = action.payload;
+
+				Object.values(state.entities).forEach((exercise) => {
+					if (exercise && exercise.categories.includes(categoryId)) {
+						// eslint-disable-next-line no-param-reassign
+						exercise.categories = exercise.categories.filter(
+							(id) => id !== categoryId
+						);
+					}
+				});
+			});
 	},
 });
 

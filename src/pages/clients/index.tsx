@@ -7,7 +7,6 @@ import {
 	Divider,
 	Button,
 	Space,
-	theme,
 	Popconfirm,
 	Spin,
 } from 'antd';
@@ -21,6 +20,7 @@ import {
 	selectAllClients,
 	selectIsLoading as selectClientsAreLoading,
 } from '../../entities/client/lib/client-slice';
+import { I18nMessage } from '../../shared/ui/i18n';
 
 // ---
 
@@ -59,9 +59,6 @@ export default function ClientsPage() {
 			item.name.toLowerCase().includes(filterQuery.toLowerCase())
 		);
 
-	const text = 'Are you sure to delete this task?';
-	const description = 'Delete the task';
-
 	return (
 		<Row>
 			<Col span={8} offset={8}>
@@ -73,29 +70,34 @@ export default function ClientsPage() {
 						bordered
 						dataSource={filteredData}
 						renderItem={(item) => (
-							<List.Item key={item.id}>
-								{item.name}
-								<div>
-									<Link to={`/client/${item.id}`}>
+							<List.Item
+								key={item.id}
+								actions={[
+									<Link key="1" to={`/client/${item.id}`}>
 										<Button type="text">
 											<EditOutlined />
 										</Button>
-									</Link>
+									</Link>,
+
 									<Popconfirm
+										key="2"
+										title={<I18nMessage id="Client.deleteClient" />}
+										description={
+											<I18nMessage id="Client.deleteClientExplanation" />
+										}
 										placement="topRight"
-										title={text}
-										description={description}
 										onConfirm={() => dispatch(deleteClient(item.id))}
-										okText="Yes"
-										cancelText="No"
+										okText={<I18nMessage id="Common.yes" />}
+										cancelText={<I18nMessage id="Common.no" />}
+										overlayStyle={{ width: '16em' }}
 									>
-										<Button type="text">
-											<DeleteOutlined
-												style={{ color: theme.defaultConfig.token.colorError }}
-											/>
+										<Button type="text" danger>
+											<DeleteOutlined />
 										</Button>
-									</Popconfirm>
-								</div>
+									</Popconfirm>,
+								]}
+							>
+								{item.name}
 							</List.Item>
 						)}
 					/>

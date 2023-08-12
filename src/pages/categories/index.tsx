@@ -1,14 +1,28 @@
 import React, { useState } from 'react';
-import { List, Input, Col, Row, Divider, Tag, Button, Space, Spin } from 'antd';
+import {
+	List,
+	Input,
+	Col,
+	Row,
+	Divider,
+	Tag,
+	Button,
+	Space,
+	Spin,
+	Popconfirm,
+} from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
-import { EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { useIntl } from 'react-intl';
 
-import { useAppSelector } from '../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import {
+	deleteCategory,
 	selectAllCategories,
 	selectIsLoading as selectCategoriesAreLoading,
 } from '../../entities/category/lib/category-slice';
+import { I18nMessage } from '../../shared/ui/i18n';
+import { removeCategoryFromExercises } from '../../entities/exercise/lib/exercise-slice';
 
 // ---
 
@@ -38,6 +52,7 @@ function CategorySearch({ onSearch }: CategorySearchProps) {
 }
 
 export default function CategoriesPage() {
+	const dispatch = useAppDispatch();
 	const loading = useAppSelector(selectCategoriesAreLoading);
 	const categories = useAppSelector(selectAllCategories);
 	const [filterQuery, setFilterQuery] = useState('');
@@ -46,6 +61,14 @@ export default function CategoriesPage() {
 		.filter((item) =>
 			item.name.toLowerCase().includes(filterQuery.toLowerCase())
 		);
+
+	const handleRemove = (id: string) => {
+		dispatch(deleteCategory(id))
+			.unwrap()
+			.then(() => {
+				dispatch(removeCategoryFromExercises(id));
+			});
+	};
 
 	return (
 		<Row>
@@ -57,16 +80,35 @@ export default function CategoriesPage() {
 						size="small"
 						bordered
 						dataSource={filteredData}
+						itemLayout="horizontal"
 						renderItem={(item) => (
-							<List.Item key={item.id}>
-								<Tag color={item.color}>{item.name}</Tag>
-								<div>
-									<Link to={`/category/${item.id}`}>
+							<List.Item
+								key={item.id}
+								actions={[
+									<Link key="1" to={`/category/${item.id}`}>
 										<Button type="text">
 											<EditOutlined />
 										</Button>
-									</Link>
-								</div>
+									</Link>,
+									<Popconfirm
+										key="2"
+										title={<I18nMessage id="Category.deleteCategory" />}
+										description={
+											<I18nMessage id="Category.deleteCategoryExplanation" />
+										}
+										placement="topRight"
+										onConfirm={() => handleRemove(item.id)}
+										okText={<I18nMessage id="Common.yes" />}
+										cancelText={<I18nMessage id="Common.no" />}
+										overlayStyle={{ width: '16em' }}
+									>
+										<Button type="text" danger>
+											<DeleteOutlined />
+										</Button>
+									</Popconfirm>,
+								]}
+							>
+								<Tag color={item.color}>{item.name}</Tag>
 							</List.Item>
 						)}
 					/>

@@ -7,5 +7,8 @@ export default {
 	'Common.themeLight': 'Светлая',
 	'Common.themeDark': 'Темная',
 
+	'Common.yes': 'Да',
+	'Common.no': 'Нет',
+
 	'Common.startTypingToSearch': 'Начните вводить для поиска ...',
 };
