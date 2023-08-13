@@ -1,18 +1,36 @@
 import React, { useState } from 'react';
-import { List, Input, Col, Row, Divider, Tag, Button, Space, Spin } from 'antd';
+import {
+	List,
+	Input,
+	Col,
+	Row,
+	Divider,
+	Tag,
+	Button,
+	Space,
+	Spin,
+	Popconfirm,
+} from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
-import { EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { useIntl } from 'react-intl';
 
-import { useAppSelector } from '../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+
+// Entities
 import {
 	selectAllExercises,
 	selectIsLoading as selectExercisesAreLoading,
+	deleteExercise,
 } from '../../entities/exercise/lib/exercise-slice';
 import {
 	selectCategoryEntities,
 	selectIsLoading as selectCategoriesAreLoading,
 } from '../../entities/category/lib/category-slice';
+import { removeExerciseFromWorkouts } from '../../entities/workout/lib/workout-slice';
+
+// UI
+import { I18nMessage } from '../../shared/ui/i18n';
 
 // ---
 
@@ -42,6 +60,8 @@ function ExerciseSearch({ onSearch }: ExerciseSearchProps) {
 }
 
 export default function ExercisesPage() {
+	const dispatch = useAppDispatch();
+
 	const loading = useAppSelector(
 		(state) =>
 			selectExercisesAreLoading(state) || selectCategoriesAreLoading(state)
@@ -55,6 +75,14 @@ export default function ExercisesPage() {
 			item.name.toLowerCase().includes(filterQuery.toLowerCase())
 		);
 
+	const handleRemove = (id: string) => {
+		dispatch(deleteExercise(id))
+			.unwrap()
+			.then(() => {
+				dispatch(removeExerciseFromWorkouts(id));
+			});
+	};
+
 	return (
 		<Row>
 			<Col span={8} offset={8}>
@@ -66,7 +94,32 @@ export default function ExercisesPage() {
 						bordered
 						dataSource={filteredData}
 						renderItem={(item) => (
-							<List.Item key={item.id}>
+							<List.Item
+								key={item.id}
+								actions={[
+									<Link key="1" to={`/exercise/${item.id}`}>
+										<Button type="text">
+											<EditOutlined />
+										</Button>
+									</Link>,
+									<Popconfirm
+										key="2"
+										title={<I18nMessage id="Exercise.deleteExercise" />}
+										description={
+											<I18nMessage id="Exercise.deleteExerciseExplanation" />
+										}
+										placement="topRight"
+										onConfirm={() => handleRemove(item.id)}
+										okText={<I18nMessage id="Common.yes" />}
+										cancelText={<I18nMessage id="Common.no" />}
+										overlayStyle={{ width: '16em' }}
+									>
+										<Button type="text" danger>
+											<DeleteOutlined />
+										</Button>
+									</Popconfirm>,
+								]}
+							>
 								<span>{item.name}</span>
 
 								<span>
@@ -81,14 +134,6 @@ export default function ExercisesPage() {
 										) : null
 									)}
 								</span>
-
-								<div>
-									<Link to={`/exercise/${item.id}`}>
-										<Button type="text">
-											<EditOutlined />
-										</Button>
-									</Link>
-								</div>
 							</List.Item>
 						)}
 					/>

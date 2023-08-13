@@ -38,6 +38,13 @@ export const deleteWorkout = createAsyncThunk(
 	}
 );
 
+export const removeExerciseFromWorkouts = createAsyncThunk(
+	'workouts/removeExerciseFromWorkouts',
+	async (exerciseId: string) => {
+		return exerciseId;
+	}
+);
+
 export const updateWorkout = createAsyncThunk(
 	'workouts/updateWorkout',
 	async (workout: Workout) => {
@@ -69,7 +76,29 @@ export const workoutSlice = createSlice({
 			})
 			.addCase(addWorkout.fulfilled, workoutAdapter.addOne)
 			.addCase(deleteWorkout.fulfilled, workoutAdapter.removeOne)
-			.addCase(updateWorkout.fulfilled, workoutAdapter.upsertOne);
+			.addCase(updateWorkout.fulfilled, workoutAdapter.upsertOne)
+			.addCase(removeExerciseFromWorkouts.fulfilled, (state, action) => {
+				const exerciseId = action.payload;
+				Object.values(state.entities).forEach((workout) => {
+					if (workout) {
+						workout.plan.forEach(({ days }) => {
+							days.forEach(({ exercises }) => {
+								const indexesToRemove: number[] = [];
+
+								exercises.forEach(({ exercise }, index) => {
+									if (exercise === exerciseId) {
+										indexesToRemove.push(index);
+									}
+								});
+
+								indexesToRemove.forEach((indexToRemove, index) => {
+									exercises.splice(indexToRemove - index, 1);
+								});
+							});
+						});
+					}
+				});
+			});
 	},
 });
 
