@@ -82,6 +82,8 @@ import { I18nMessage } from '../../shared/ui/i18n';
 // ---
 const MIN_TITLE_LENGTH = 3;
 const MAX_TITLE_LENGTH = 40;
+const MAX_DAY_TITLE_LENGTH = 20;
+const MAX_WEEK_TITLE_LENGTH = 20;
 const MAX_DESCRIPTION_LENGTH = 1000;
 
 const MAX_SETS_COUNT = 10;
@@ -89,6 +91,7 @@ const MAX_MARK_LENGTH = 5;
 const MAX_REPEATS_COUNT = 50;
 const MAX_TEMPO_LENGTH = 20;
 const MAX_REST_LENGTH = 15;
+const MAX_LOAD_LENGTH = 15;
 
 interface WorkoutAddEditFormProps {
 	onSubmit: (values: FormWorkout) => Promise<void>;
@@ -106,6 +109,8 @@ interface SetFormProps {
 }
 
 function SetForm({ name, remove }: SetFormProps) {
+	const intl = useIntl();
+
 	return (
 		<div style={{ display: 'flex', gap: '10px' }}>
 			<Form.Item
@@ -114,44 +119,65 @@ function SetForm({ name, remove }: SetFormProps) {
 				rules={[
 					{
 						required: true,
-						message: 'Missing sets number',
+						message: (
+							<I18nMessage id="Workout.validation.setsNumberIsRequired" />
+						),
 					},
 					{
 						pattern: /^[0-9]+$/,
-						message: 'Load must be a number',
+						message: <I18nMessage id="Workout.validation.validNumber" />,
 					},
 				]}
 				initialValue={1}
 			>
-				<InputNumber placeholder="Sets" size="small" />
+				<InputNumber
+					placeholder={intl.formatMessage({
+						id: 'Workout.sets',
+					})}
+					size="small"
+				/>
 			</Form.Item>
+
 			<Form.Item
 				name={[name, 'load']}
 				style={{ marginBottom: '8px' }}
 				rules={[
 					{
 						required: true,
-						message: 'Missing load',
+						message: <I18nMessage id="Workout.validation.loadIsRequired" />,
 					},
 					{
-						pattern: /^[0-9]+$/,
-						message: 'Load must be a number',
+						max: MAX_LOAD_LENGTH,
+						message: (
+							<I18nMessage
+								id="Workout.validation.loadMaxLength"
+								value={{ maxLength: MAX_LOAD_LENGTH }}
+							/>
+						),
 					},
 				]}
 			>
-				<Input placeholder="Load" size="small" />
+				<Input
+					placeholder={intl.formatMessage({
+						id: 'Workout.load',
+					})}
+					size="small"
+				/>
 			</Form.Item>
+
 			<Form.Item
 				name={[name, 'repeats']}
 				style={{ marginBottom: '8px' }}
 				rules={[
 					{
 						required: true,
-						message: 'Missing repeats',
+						message: (
+							<I18nMessage id="Workout.validation.repeatsNumberIsRequired" />
+						),
 					},
 					{
 						pattern: /^[0-9]+$/,
-						message: 'Repeats must be a number',
+						message: <I18nMessage id="Workout.validation.validNumber" />,
 					},
 					{
 						validator: async (_, repeats) => {
@@ -160,7 +186,12 @@ function SetForm({ name, remove }: SetFormProps) {
 							}
 							return Promise.resolve();
 						},
-						message: `Max ${MAX_REPEATS_COUNT} repeats`,
+						message: (
+							<I18nMessage
+								id="Workout.validation.repeatsMaxValue"
+								value={{ maxValue: MAX_REPEATS_COUNT }}
+							/>
+						),
 					},
 				]}
 			>
@@ -168,7 +199,9 @@ function SetForm({ name, remove }: SetFormProps) {
 					size="small"
 					min={1}
 					max={MAX_REPEATS_COUNT}
-					placeholder="Repeats"
+					placeholder={intl.formatMessage({
+						id: 'Workout.repeats',
+					})}
 				/>
 			</Form.Item>
 
@@ -178,11 +211,21 @@ function SetForm({ name, remove }: SetFormProps) {
 				rules={[
 					{
 						max: MAX_TEMPO_LENGTH,
-						message: `Name must be max ${MAX_TEMPO_LENGTH} characters long`,
+						message: (
+							<I18nMessage
+								id="Workout.validation.tempoMaxLength"
+								value={{ maxLength: MAX_TEMPO_LENGTH }}
+							/>
+						),
 					},
 				]}
 			>
-				<Input placeholder="Tempo" size="small" />
+				<Input
+					placeholder={intl.formatMessage({
+						id: 'Workout.tempo',
+					})}
+					size="small"
+				/>
 			</Form.Item>
 
 			<Form.Item
@@ -191,11 +234,21 @@ function SetForm({ name, remove }: SetFormProps) {
 				rules={[
 					{
 						max: MAX_REST_LENGTH,
-						message: `Name must be max ${MAX_REST_LENGTH} characters long`,
+						message: (
+							<I18nMessage
+								id="Workout.validation.restMaxLength"
+								value={{ maxLength: MAX_REST_LENGTH }}
+							/>
+						),
 					},
 				]}
 			>
-				<Input placeholder="Rest" size="small" />
+				<Input
+					placeholder={intl.formatMessage({
+						id: 'Workout.rest',
+					})}
+					size="small"
+				/>
 			</Form.Item>
 
 			<Button
@@ -425,15 +478,27 @@ function DayTitleForm({ name, index, remove }: DayTitleFormProps) {
 					rules={[
 						{
 							required: true,
-							message: 'Missing day title',
+							message: (
+								<I18nMessage id="Workout.validation.dayTitleIsRequired" />
+							),
 						},
 						{
-							max: 20,
-							message: `Name must be max ${20} characters long`,
+							max: MAX_DAY_TITLE_LENGTH,
+							message: (
+								<I18nMessage
+									id="Workout.validation.dayTitleMaxLength"
+									value={{ maxLength: MAX_DAY_TITLE_LENGTH }}
+								/>
+							),
 						},
 						{
 							min: MIN_TITLE_LENGTH,
-							message: `Name must be min ${MIN_TITLE_LENGTH} characters long`,
+							message: (
+								<I18nMessage
+									id="Workout.validation.dayTitleMinLength"
+									value={{ minLength: MIN_TITLE_LENGTH }}
+								/>
+							),
 						},
 					]}
 				>
@@ -522,15 +587,27 @@ function WeekForm({
 							rules={[
 								{
 									required: true,
-									message: 'Missing week title',
+									message: (
+										<I18nMessage id="Workout.validation.weekTitleIsRequired" />
+									),
 								},
 								{
-									max: 20,
-									message: `Name must be max ${20} characters long`,
+									max: MAX_WEEK_TITLE_LENGTH,
+									message: (
+										<I18nMessage
+											id="Workout.validation.weekTitleMaxLength"
+											value={{ maxLength: MAX_WEEK_TITLE_LENGTH }}
+										/>
+									),
 								},
 								{
 									min: MIN_TITLE_LENGTH,
-									message: `Name must be min ${MIN_TITLE_LENGTH} characters long`,
+									message: (
+										<I18nMessage
+											id="Workout.validation.weekTitleMinLength"
+											value={{ minLength: MIN_TITLE_LENGTH }}
+										/>
+									),
 								},
 							]}
 						>
@@ -672,6 +749,11 @@ function calculateLoad(
 ) {
 	const categoryMetasCopy = structuredClone(categoryMetas);
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	function isNumeric(value: any): boolean {
+		return !Number.isNaN(value - parseFloat(value));
+	}
+
 	plan.forEach((week: FormWeek) => {
 		week.days.forEach((day: FormDay) => {
 			day.exercises.forEach((exercise: FormPlannedExercise) => {
@@ -683,6 +765,10 @@ function calculateLoad(
 
 				categoryIds.forEach((categoryId) => {
 					sets.forEach((set: FormPlannedSet) => {
+						if (!isNumeric(set.load)) {
+							return;
+						}
+
 						categoryMetasCopy[categoryId].tonnage +=
 							(Number(set.load) ?? 0) * (set.repeats ?? 0) * (set.sets ?? 0);
 						categoryMetasCopy[categoryId].numberOfLifts +=
@@ -1150,15 +1236,27 @@ function WorkoutAddEditForm({
 								rules={[
 									{
 										required: true,
-										message: 'Please enter a name for the workout',
-									},
-									{
-										min: MIN_TITLE_LENGTH,
-										message: `Name must be at least ${MIN_TITLE_LENGTH} characters long`,
+										message: (
+											<I18nMessage id="Workout.validation.workoutTitleIsRequired" />
+										),
 									},
 									{
 										max: MAX_TITLE_LENGTH,
-										message: `Name must be max ${MAX_TITLE_LENGTH} characters long`,
+										message: (
+											<I18nMessage
+												id="Workout.validation.workoutTitleMaxLength"
+												value={{ maxLength: MAX_TITLE_LENGTH }}
+											/>
+										),
+									},
+									{
+										min: MIN_TITLE_LENGTH,
+										message: (
+											<I18nMessage
+												id="Workout.validation.workoutTitleMinLength"
+												value={{ minLength: MIN_TITLE_LENGTH }}
+											/>
+										),
 									},
 								]}
 							>
@@ -1171,7 +1269,12 @@ function WorkoutAddEditForm({
 								rules={[
 									{
 										max: MAX_DESCRIPTION_LENGTH,
-										message: `Description must be max ${MAX_DESCRIPTION_LENGTH} characters long`,
+										message: (
+											<I18nMessage
+												id="Workout.validation.descriptionMaxLength"
+												value={{ maxLength: MAX_DESCRIPTION_LENGTH }}
+											/>
+										),
 									},
 								]}
 							>

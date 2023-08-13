@@ -26,6 +26,47 @@ export default {
 	'Workout.form.saveAndExport': 'Зберегти та експортувати',
 	'Workout.form.saveAndDuplicate': 'Зберегти та дублювати',
 
+	'Workout.validation.workoutTitleIsRequired': "Назва тренування обов'язкова",
+	'Workout.validation.workoutTitleMinLength':
+		'Мінімальна довжина назви - {minLength} символів',
+	'Workout.validation.workoutTitleMaxLength':
+		'Максимальна довжина назви - {maxLength} символів',
+
+	'Workout.validation.descriptionMaxLength':
+		'Максимальна довжина опису - {maxLength} символів',
+
+	'Workout.validation.dayTitleMinLength':
+		'Мінімальна довжина назви дня - {minLength} символів',
+	'Workout.validation.dayTitleIsRequired': 'Назва дня обовязкова',
+	'Workout.validation.dayTitleMaxLength':
+		'Максимальна довжина назви дня - {maxLength} символів',
+
+	'Workout.validation.weekTitleMinLength':
+		'Мінімальна довжина назви тижня - {minLength} символів',
+	'Workout.validation.weekTitleIsRequired': 'Назва тижня обовязкова',
+	'Workout.validation.weekTitleMaxLength':
+		'Максимальна довжина назви тижня - {maxLength} символів',
+
+	'Workout.validation.setsNumberIsRequired': 'Кількість підходів обовязкова',
+	'Workout.validation.repeatsNumberIsRequired': 'Кількість повторів обовязкова',
+	'Workout.validation.repeatsMaxValue':
+		'Кількість повторів не може бути більше {maxValue}',
+	'Workout.validation.validNumber': 'Введіть коректне число',
+	'Workout.validation.tempoMaxLength':
+		'Темп повинен бути не більше {maxLength} символів',
+	'Workout.validation.restMaxLength':
+		'Відпочинок повинен бути не більше {maxLength} символів',
+	'Workout.validation.loadIsRequired': 'Навантаження обовязкове',
+
+	'Workout.validation.loadMaxLength':
+		'Навантаження повинно бути не більше {maxLength} символів',
+
+	'Workout.sets': 'Підходи',
+	'Workout.repeats': 'Повтори',
+	'Workout.load': 'Навантаження',
+	'Workout.tempo': 'Темп',
+	'Workout.rest': 'Відпочинок',
+
 	'Workout.averageLoad': 'Середнє навантаження',
 	'Workout.numberOfLiftsAbbr': 'КПШ',
 	'Workout.numberOfLifts': 'Кількість підйомів штанги',
