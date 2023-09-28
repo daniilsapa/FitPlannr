@@ -84,61 +84,71 @@ export default function ExercisesPage() {
 	};
 
 	return (
-		<Row>
-			<Col span={8} offset={8}>
-				<Spin spinning={loading}>
-					<ExerciseSearch onSearch={setFilterQuery} />
-					<Divider />
-					<List
-						size="small"
-						bordered
-						dataSource={filteredData}
-						renderItem={(item) => (
-							<List.Item
-								key={item.id}
-								actions={[
-									<Link key="1" to={`/exercise/${item.id}`}>
-										<Button type="text">
-											<EditOutlined />
-										</Button>
-									</Link>,
-									<Popconfirm
-										key="2"
-										title={<I18nMessage id="Exercise.deleteExercise" />}
-										description={
-											<I18nMessage id="Exercise.deleteExerciseExplanation" />
-										}
-										placement="topRight"
-										onConfirm={() => handleRemove(item.id)}
-										okText={<I18nMessage id="Common.yes" />}
-										cancelText={<I18nMessage id="Common.no" />}
-										overlayStyle={{ width: '16em' }}
-									>
-										<Button type="text" danger>
-											<DeleteOutlined />
-										</Button>
-									</Popconfirm>,
-								]}
-							>
-								<span>{item.name}</span>
+		<div style={{ margin: '2em 2em 0' }}>
+			<Row>
+				<Col
+					xs={{ span: 24, offset: 0 }}
+					sm={{ span: 16, offset: 4 }}
+					md={{ span: 12, offset: 6 }}
+					lg={{ span: 12, offset: 6 }}
+					xl={{ span: 8, offset: 8 }}
+				>
+					<Spin spinning={loading}>
+						<ExerciseSearch onSearch={setFilterQuery} />
+						<Divider />
+						<List
+							size="small"
+							bordered
+							dataSource={filteredData}
+							renderItem={(item) => (
+								<List.Item
+									key={item.id}
+									actions={[
+										<Link key="1" to={`/exercise/${item.id}`}>
+											<Button type="text" size="small">
+												<EditOutlined />
+											</Button>
+										</Link>,
+										<Popconfirm
+											key="2"
+											title={<I18nMessage id="Exercise.deleteExercise" />}
+											description={
+												<I18nMessage id="Exercise.deleteExerciseExplanation" />
+											}
+											placement="topRight"
+											onConfirm={() => handleRemove(item.id)}
+											okText={<I18nMessage id="Common.yes" />}
+											cancelText={<I18nMessage id="Common.no" />}
+											overlayStyle={{ width: '16em' }}
+										>
+											<Button type="text" size="small" danger>
+												<DeleteOutlined />
+											</Button>
+										</Popconfirm>,
+									]}
+								>
+									<div>
+										<span style={{ padding: '0 1em 0 0' }}>{item.name}</span>
 
-								<span>
-									{item.categories.map((categoryId) =>
-										typeof categories[categoryId] !== 'undefined' ? (
-											<Tag
-												key={categoryId}
-												color={categories[categoryId]?.color}
-											>
-												{categories[categoryId]?.name}
-											</Tag>
-										) : null
-									)}
-								</span>
-							</List.Item>
-						)}
-					/>
-				</Spin>
-			</Col>
-		</Row>
+										<span>
+											{item.categories.map((categoryId) =>
+												typeof categories[categoryId] !== 'undefined' ? (
+													<Tag
+														key={categoryId}
+														color={categories[categoryId]?.color}
+													>
+														{categories[categoryId]?.name}
+													</Tag>
+												) : null
+											)}
+										</span>
+									</div>
+								</List.Item>
+							)}
+						/>
+					</Spin>
+				</Col>
+			</Row>
+		</div>
 	);
 }

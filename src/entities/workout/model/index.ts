@@ -7,7 +7,7 @@ export type PlannedSet = {
 
 export type PlannedExercise = {
 	exercise: string;
-	mark: string;
+	mark?: string;
 	sets: PlannedSet[];
 };
 

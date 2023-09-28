@@ -176,6 +176,7 @@ function ClientAddEditForm({
 									block
 									icon={<PlusOutlined />}
 								>
+									{' '}
 									<I18nMessage id="Client.addRecord" />
 								</Button>
 							</Form.Item>
@@ -184,9 +185,17 @@ function ClientAddEditForm({
 				</Form.List>
 
 				<Form.Item>
-					<Button type="primary" htmlType="submit">
-						<I18nMessage id="Common.save" />
-					</Button>
+					<div
+						style={{
+							display: 'flex',
+							flexDirection: 'row',
+							justifyContent: 'flex-end',
+						}}
+					>
+						<Button type="primary" htmlType="submit">
+							<I18nMessage id="Common.save" />
+						</Button>
+					</div>
 				</Form.Item>
 			</Form>
 		</Spin>
@@ -258,10 +267,18 @@ export default function ClientSinglePage() {
 	}
 
 	return (
-		<Row>
-			<Col span="8" offset="8">
-				{render}
-			</Col>
-		</Row>
+		<div style={{ margin: '2em 2em 0' }}>
+			<Row>
+				<Col
+					xs={{ span: 24, offset: 0 }}
+					sm={{ span: 16, offset: 4 }}
+					md={{ span: 12, offset: 6 }}
+					lg={{ span: 12, offset: 6 }}
+					xl={{ span: 8, offset: 8 }}
+				>
+					{render}
+				</Col>
+			</Row>
+		</div>
 	);
 }

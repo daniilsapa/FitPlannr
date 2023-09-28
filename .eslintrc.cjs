@@ -24,6 +24,7 @@ module.exports = {
     'react/react-in-jsx-scope': 0,
     'indent': 'off',
     '@typescript-eslint/indent': 'off',
+    '@typescript-eslint/ban-ts-comment': 'off',
     'prettier/prettier': ['error', {
       'endOfLine': 'auto',
       'printWidth': 80,

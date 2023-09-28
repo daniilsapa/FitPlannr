@@ -64,44 +64,57 @@ export default function WorkoutsPage() {
 	const description = 'Delete the task';
 
 	return (
-		<Row>
-			<Col span={8} offset={8}>
-				<Spin spinning={loading}>
-					<WorkoutSearch onSearch={setFilterQuery} />
-					<Divider />
-					<List
-						size="small"
-						bordered
-						dataSource={filteredData}
-						renderItem={(item: Workout) => (
-							<List.Item key={item._id}>
-								{item.title}
-								<div>
-									<Link to={`/workout/${item._id}`}>
-										<Button type="text">
-											<EditOutlined />
-										</Button>
-									</Link>
-									<Popconfirm
-										placement="topRight"
-										title={text}
-										description={description}
-										onConfirm={() => dispatch(deleteWorkout(item._id))}
-										okText="Yes"
-										cancelText="No"
-									>
-										<Button type="text">
-											<DeleteOutlined
-												style={{ color: theme.defaultConfig.token.colorError }}
-											/>
-										</Button>
-									</Popconfirm>
-								</div>
-							</List.Item>
-						)}
-					/>
-				</Spin>
-			</Col>
-		</Row>
+		<div style={{ margin: '2em 2em 0' }}>
+			<Row>
+				<Col
+					xs={{ span: 24, offset: 0 }}
+					sm={{ span: 16, offset: 4 }}
+					md={{ span: 12, offset: 6 }}
+					lg={{ span: 12, offset: 6 }}
+					xl={{ span: 8, offset: 8 }}
+				>
+					<Spin spinning={loading}>
+						<WorkoutSearch onSearch={setFilterQuery} />
+						<Divider />
+						<List
+							size="small"
+							bordered
+							dataSource={filteredData}
+							renderItem={(item: Workout) => (
+								<List.Item
+									key={item._id}
+									actions={[
+										<Link to={`/workout/${item._id}`} key="1">
+											<Button type="text">
+												<EditOutlined />
+											</Button>
+										</Link>,
+										<Popconfirm
+											key="2"
+											placement="topRight"
+											title={text}
+											description={description}
+											onConfirm={() => dispatch(deleteWorkout(item._id))}
+											okText="Yes"
+											cancelText="No"
+										>
+											<Button type="text">
+												<DeleteOutlined
+													style={{
+														color: theme.defaultConfig.token.colorError,
+													}}
+												/>
+											</Button>
+										</Popconfirm>,
+									]}
+								>
+									{item.title}
+								</List.Item>
+							)}
+						/>
+					</Spin>
+				</Col>
+			</Row>
+		</div>
 	);
 }

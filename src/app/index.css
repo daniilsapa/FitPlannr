@@ -1,0 +1,17 @@
+.desktop-menu {
+	display: block;
+}
+
+.mobile-menu {
+	display: none;
+}
+
+@media screen and (width <= 1439px) {
+	.desktop-menu {
+		display: none !important;
+	}
+
+	.mobile-menu {
+		display: block;
+	}
+}

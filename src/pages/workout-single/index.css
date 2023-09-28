@@ -1,3 +1,90 @@
 .row-disabled {
 	opacity: 0.5;
 }
+
+.fixed {
+	position: fixed;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 100;
+}
+
+.load-calculator__hide-column-titles .ant-table-thead {
+	display: none;
+}
+
+.slick-dots.slick-dots-top {
+	top: -30px;
+}
+
+.collapsed-block {
+	border: 1px solid #e8e8e8, 1px solid #e8e8e8, 0, 0;
+	border-radius: 6px 6px 0 0;
+	box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
+}
+
+.handle {
+	width: 3em;
+	margin: 0 auto;
+	padding: 5px;
+	text-align: center;
+	background-color: #001529;
+	border-radius: 8px;
+	cursor: pointer;
+}
+
+.handle-wrapper {
+	padding: 0.5em 0 1em;
+	border-radius: 6px 6px 0 0;
+}
+
+.slick-dots li,
+.slick-dots .slick-active button {
+	background: #001529 !important;
+}
+
+.desktop-view {
+	display: block;
+}
+
+.mobile-view {
+	display: none;
+}
+
+@media screen and (width <= 1439px) {
+	.desktop-view {
+		display: none !important;
+	}
+
+	.mobile-view {
+		display: block;
+	}
+
+	.ant-card-body {
+		padding: 1em !important;
+	}
+
+	.set-form .ant-form-item-control-input-content,
+	.set-form .ant-input-number {
+		min-width: 50px;
+		max-width: 60px !important;
+	}
+}
+
+/* Hack to make a single cell of the table scrollable */
+
+.load-calculator .ant-table-cell > .ant-space {
+	max-width: 100%;
+	overflow: auto;
+	scrollbar-width: none; /* Firefox */
+	-ms-overflow-style: none; /* IE and Edge */
+}
+
+/* width */
+
+.load-calculator .ant-table-cell > .ant-space::-webkit-scrollbar {
+	display: none; /* Safari and Chrome */
+	background: transparent;
+	box-shadow: none;
+}

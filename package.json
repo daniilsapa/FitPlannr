@@ -31,6 +31,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "framer-motion": "^10.16.4",
     "husky": "^8.0.3",
     "jest": "^27.4.3",
     "jest-resolve": "^27.4.2",
@@ -58,6 +59,7 @@
     "stylelint-scss": "^5.0.1",
     "typescript": "^5.0.2",
     "vite": "^4.3.9",
+    "vite-tsconfig-paths": "^4.2.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

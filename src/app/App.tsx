@@ -3,13 +3,14 @@ import {
 	Layout,
 	Menu,
 	ConfigProvider,
-	Switch,
 	Image,
 	theme,
-	Select,
+	Popover,
+	Button,
 } from 'antd';
 import {
 	BuildOutlined,
+	MenuOutlined,
 	RiseOutlined,
 	UnorderedListOutlined,
 	UserOutlined,
@@ -19,39 +20,43 @@ import { Routes, Route, BrowserRouter, useNavigate } from 'react-router-dom';
 // Types
 import type { MenuProps } from 'antd';
 
-import ProtectedRoute from './app/ProtectedRoute';
-import { useAppDispatch, useAppSelector } from './app/hooks';
+import ProtectedRoute from './ProtectedRoute';
+import { useAppDispatch, useAppSelector } from './hooks';
 import {
 	getUserProfile,
 	selectIsAuthenticated,
 	selectIsLoading,
-} from './entities/user/lib/userSlice';
-import { I18nProvider, locales } from './app/i18n';
+} from '../entities/user/lib/userSlice';
+import { I18nProvider, locales } from './i18n';
 
 // UI
-import UnderConstructionPlug from './app/ui/UnderConstructionPlug';
-import AuthPage from './pages/auth';
-import LogOutButton from './entities/user/ui/LogOutButton';
-import CategoriesPage from './pages/categories';
-import CategorySinglePage from './pages/category-single';
-import { fetchCategories } from './entities/category/lib/category-slice';
-import { fetchClients } from './entities/client/lib/client-slice';
-import { fetchWorkouts } from './entities/workout/lib/workout-slice';
-import { fetchExercises } from './entities/exercise/lib/exercise-slice';
-import ExerciseSinglePage from './pages/exercise-single';
-import ExercisesPage from './pages/exercises';
-import WorkoutSinglePage from './pages/workout-single';
-import WorkoutsPage from './pages/workouts';
-import ClientsPage from './pages/clients';
-import ClientSinglePage from './pages/client-single';
-import { I18nMessage } from './shared/ui/i18n';
-import NotFoundPage from './pages/not-found';
+import AuthPage from '../pages/auth';
+import LogOutButton from '../entities/user/ui/LogOutButton';
+import CategoriesPage from '../pages/categories';
+import CategorySinglePage from '../pages/category-single';
+import { fetchCategories } from '../entities/category/lib/category-slice';
+import { fetchClients } from '../entities/client/lib/client-slice';
+import { fetchWorkouts } from '../entities/workout/lib/workout-slice';
+import { fetchExercises } from '../entities/exercise/lib/exercise-slice';
+import ExerciseSinglePage from '../pages/exercise-single';
+import ExercisesPage from '../pages/exercises';
+import WorkoutSinglePage from '../pages/workout-single';
+import WorkoutsPage from '../pages/workouts';
+import ClientsPage from '../pages/clients';
+import ClientSinglePage from '../pages/client-single';
+import { I18nMessage } from '../shared/ui/i18n';
+import NotFoundPage from '../pages/not-found';
+import LocaleSwitcher from './ui/LocaleSwitcher';
 
-import logo from './app/logo.svg';
-import logoWhite from './app/logo-white.svg';
-import ukrainianFlag from './app/ua-locale.jpg';
-import russianFlag from './app/ru-locale.jpg';
-import greatBritainFlag from './app/en-locale.jpg';
+// Styles
+import './index.css';
+
+// Assets
+
+import logo from './logo.svg';
+import logoWhite from './logo-white.svg';
+import ThemeSwitcher from './ui/ThemeSwitcher';
+import UnderConstructionPlug from './ui/UnderConstructionPlug';
 
 // ---
 
@@ -93,10 +98,6 @@ interface ThemeData {
 	[key: string]: typeof theme.defaultAlgorithm | typeof theme.darkAlgorithm;
 }
 
-interface SideBarMenuProps {
-	menuItems: MenuItem[];
-}
-
 const navigation = [
 	{ label: 'Workouts', key: 1, target: '/workouts' },
 	{ label: 'Clients', key: 2, target: '/clients' },
@@ -109,7 +110,12 @@ const themes: ThemeData = {
 	dark: theme.darkAlgorithm,
 };
 
-function NavMenu({ menuItems }: SideBarMenuProps) {
+interface SideBarMenuProps {
+	menuItems: MenuItem[];
+	inline?: boolean;
+}
+
+function NavMenu({ menuItems, inline }: SideBarMenuProps) {
 	const navigate = useNavigate();
 	const handleMenuClick = ({ key }: { key: string }) => {
 		const { target } =
@@ -124,12 +130,17 @@ function NavMenu({ menuItems }: SideBarMenuProps) {
 		<Menu
 			defaultSelectedKeys={['1']}
 			theme="dark"
-			mode="horizontal"
+			mode={inline ? 'inline' : 'horizontal'}
 			onClick={handleMenuClick}
 			items={menuItems}
+			expandIcon={<MenuOutlined />}
 		/>
 	);
 }
+
+NavMenu.defaultProps = {
+	inline: false,
+};
 
 const THEME_STORAGE_KEY = 'theme';
 
@@ -185,84 +196,115 @@ function App() {
 					<UnderConstructionPlug />
 
 					<Layout style={{ minHeight: '100vh' }}>
-						<Header
-							style={{
-								display: 'flex',
-								alignItems: 'center',
-								justifyContent: 'space-between',
-							}}
-						>
-							<div style={{ display: 'flex', gap: '1em' }}>
-								<Image
-									alt="Site logo"
-									src={currentTheme === 'dark' ? logoWhite : logo}
-									width="100px"
-									preview={false}
-								/>
-								<div
-									style={{ maxWidth: '40em', minWidth: '40em', width: '100%' }}
-								>
-									{isAuthenticated && <NavMenu menuItems={items} />}
-								</div>
-							</div>
-
+						<Header>
 							<div
-								style={{ display: 'flex', gap: '0 1em', alignItems: 'center' }}
+								style={{
+									display: 'flex',
+								}}
 							>
-								<div>{isAuthenticated && <LogOutButton />}</div>
-
 								<div>
-									<Select
-										onChange={changeLocale}
-										defaultValue={locale}
-										style={{ width: '12em' }}
-									>
-										<Select.Option value={locales.UKRAINIAN}>
-											<div className="locale-wrapper">
-												<Image
-													alt="Ukrainian flag"
-													width="2em"
-													preview={false}
-													src={ukrainianFlag}
-												/>
-												<div className="locale-wrapper-text">Українська</div>
-											</div>
-										</Select.Option>
-
-										<Select.Option value={locales.ENGLISH}>
-											<div className="locale-wrapper">
-												<Image
-													alt="Flag of Great Britain"
-													width="2em"
-													preview={false}
-													src={greatBritainFlag}
-												/>
-												<div className="locale-wrapper-text">English</div>
-											</div>
-										</Select.Option>
-
-										<Select.Option value={locales.RUSSIAN}>
-											<div className="locale-wrapper">
-												<Image
-													alt="Flag of opposition to the 2022 Russian invasion of Ukraine"
-													width="2em"
-													preview={false}
-													src={russianFlag}
-												/>
-												<div className="locale-wrapper-text">Русский</div>
-											</div>
-										</Select.Option>
-									</Select>
+									<Image
+										alt="Site logo"
+										src={currentTheme === 'dark' ? logoWhite : logo}
+										width="100px"
+										preview={false}
+									/>
 								</div>
-								<Switch
-									checkedChildren="🌙"
-									unCheckedChildren="☀️"
-									defaultChecked={currentTheme === 'dark'}
-									onChange={handleThemeChange}
-								/>
+
+								<div
+									className="desktop-menu"
+									style={{
+										display: 'flex',
+										alignItems: 'center',
+										justifyContent: 'space-between',
+										paddingLeft: '1em',
+										width: '100%',
+									}}
+								>
+									<div
+										style={{
+											maxWidth: '40em',
+											minWidth: '40em',
+											width: '100%',
+										}}
+									>
+										{isAuthenticated && <NavMenu menuItems={items} />}
+									</div>
+									<div
+										style={{
+											display: 'flex',
+											gap: '0 1em',
+											alignItems: 'center',
+										}}
+									>
+										<div>{isAuthenticated && <LogOutButton />}</div>
+
+										<div>
+											<LocaleSwitcher
+												locale={locale}
+												onChangeLocale={changeLocale}
+											/>
+										</div>
+										<ThemeSwitcher
+											theme={currentTheme}
+											onThemeChange={handleThemeChange}
+										/>
+									</div>
+								</div>
+
+								<div className="mobile-menu">
+									<Popover
+										content={
+											<div
+												style={{
+													display: 'flex',
+													flexDirection: 'column',
+													gap: '2em 0',
+												}}
+											>
+												<div>
+													{isAuthenticated && (
+														<NavMenu menuItems={items} inline />
+													)}
+												</div>
+
+												<div>
+													<LocaleSwitcher
+														locale={locale}
+														onChangeLocale={changeLocale}
+													/>
+												</div>
+
+												<div
+													style={{
+														display: 'flex',
+														justifyContent: 'space-between',
+														alignItems: 'center',
+													}}
+												>
+													<ThemeSwitcher
+														theme={currentTheme}
+														onThemeChange={handleThemeChange}
+													/>
+													{isAuthenticated && <LogOutButton />}
+												</div>
+											</div>
+										}
+										color="rgb(0, 21, 41)"
+										overlayInnerStyle={{
+											boxShadow: '0 0 10px 0 rgba(0, 0, 0, 0.6)',
+										}}
+										trigger="click"
+										placement="bottomRight"
+									>
+										<Button>
+											<MenuOutlined />
+										</Button>
+									</Popover>
+								</div>
 							</div>
 						</Header>
-						<Content style={{ paddingTop: '3em' }}>
+						<Content style={{ paddingTop: '2em' }}>
 							<Routes>
 								<Route
 									path="/category/:id"

@@ -60,49 +60,57 @@ export default function ClientsPage() {
 		);
 
 	return (
-		<Row>
-			<Col span={8} offset={8}>
-				<Spin spinning={loading}>
-					<ClientSearch onSearch={setFilterQuery} />
-					<Divider />
-					<List
-						size="small"
-						bordered
-						dataSource={filteredData}
-						renderItem={(item) => (
-							<List.Item
-								key={item.id}
-								actions={[
-									<Link key="1" to={`/client/${item.id}`}>
-										<Button type="text">
-											<EditOutlined />
-										</Button>
-									</Link>,
+		<div style={{ margin: '2em 2em 0' }}>
+			<Row>
+				<Col
+					xs={{ span: 24, offset: 0 }}
+					sm={{ span: 16, offset: 4 }}
+					md={{ span: 12, offset: 6 }}
+					lg={{ span: 12, offset: 6 }}
+					xl={{ span: 8, offset: 8 }}
+				>
+					<Spin spinning={loading}>
+						<ClientSearch onSearch={setFilterQuery} />
+						<Divider />
+						<List
+							size="small"
+							bordered
+							dataSource={filteredData}
+							renderItem={(item) => (
+								<List.Item
+									key={item.id}
+									actions={[
+										<Link key="1" to={`/client/${item.id}`}>
+											<Button type="text">
+												<EditOutlined />
+											</Button>
+										</Link>,
 
-									<Popconfirm
-										key="2"
-										title={<I18nMessage id="Client.deleteClient" />}
-										description={
-											<I18nMessage id="Client.deleteClientExplanation" />
-										}
-										placement="topRight"
-										onConfirm={() => dispatch(deleteClient(item.id))}
-										okText={<I18nMessage id="Common.yes" />}
-										cancelText={<I18nMessage id="Common.no" />}
-										overlayStyle={{ width: '16em' }}
-									>
-										<Button type="text" danger>
-											<DeleteOutlined />
-										</Button>
-									</Popconfirm>,
-								]}
-							>
-								{item.name}
-							</List.Item>
-						)}
-					/>
-				</Spin>
-			</Col>
-		</Row>
+										<Popconfirm
+											key="2"
+											title={<I18nMessage id="Client.deleteClient" />}
+											description={
+												<I18nMessage id="Client.deleteClientExplanation" />
+											}
+											placement="topRight"
+											onConfirm={() => dispatch(deleteClient(item.id))}
+											okText={<I18nMessage id="Common.yes" />}
+											cancelText={<I18nMessage id="Common.no" />}
+											overlayStyle={{ width: '16em' }}
+										>
+											<Button type="text" danger>
+												<DeleteOutlined />
+											</Button>
+										</Popconfirm>,
+									]}
+								>
+									{item.name}
+								</List.Item>
+							)}
+						/>
+					</Spin>
+				</Col>
+			</Row>
+		</div>
 	);
 }
