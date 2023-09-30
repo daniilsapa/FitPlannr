@@ -10,5 +10,7 @@ export default {
 	'Common.yes': 'Так',
 	'Common.no': 'Ні',
 
+	'Common.backTo': 'Назад до {what}',
+
 	'Common.startTypingToSearch': 'Почніть вводити для пошуку ...',
 };

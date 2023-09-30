@@ -93,7 +93,7 @@ export default function CategoriesPage() {
 									key={item.id}
 									actions={[
 										<Link key="1" to={`/category/${item.id}`}>
-											<Button type="text">
+											<Button size="small" type="text">
 												<EditOutlined />
 											</Button>
 										</Link>,
@@ -109,13 +109,15 @@ export default function CategoriesPage() {
 											cancelText={<I18nMessage id="Common.no" />}
 											overlayStyle={{ width: '16em' }}
 										>
-											<Button type="text" danger>
+											<Button size="small" type="text" danger>
 												<DeleteOutlined />
 											</Button>
 										</Popconfirm>,
 									]}
 								>
-									<Tag color={item.color}>{item.name}</Tag>
+									<List.Item.Meta
+										title={<Tag color={item.color}>{item.name}</Tag>}
+									/>
 								</List.Item>
 							)}
 						/>

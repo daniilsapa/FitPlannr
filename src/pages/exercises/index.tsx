@@ -127,22 +127,23 @@ export default function ExercisesPage() {
 										</Popconfirm>,
 									]}
 								>
-									<div>
-										<span style={{ padding: '0 1em 0 0' }}>{item.name}</span>
-
-										<span>
-											{item.categories.map((categoryId) =>
-												typeof categories[categoryId] !== 'undefined' ? (
-													<Tag
-														key={categoryId}
-														color={categories[categoryId]?.color}
-													>
-														{categories[categoryId]?.name}
-													</Tag>
-												) : null
-											)}
-										</span>
-									</div>
+									<List.Item.Meta
+										title={item.name}
+										description={
+											<span>
+												{item.categories.map((categoryId) =>
+													typeof categories[categoryId] !== 'undefined' ? (
+														<Tag
+															key={categoryId}
+															color={categories[categoryId]?.color}
+														>
+															{categories[categoryId]?.name}
+														</Tag>
+													) : null
+												)}
+											</span>
+										}
+									/>
 								</List.Item>
 							)}
 						/>

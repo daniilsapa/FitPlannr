@@ -9,5 +9,7 @@ export default {
 	'Common.yes': 'Yes',
 	'Common.no': 'No',
 
+	'Common.backTo': 'Back to {what}',
+
 	'Common.startTypingToSearch': 'Start typing to search ...',
 };

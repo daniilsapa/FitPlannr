@@ -77,10 +77,10 @@ function CategoryAddEditForm({
 							message: 'Please enter a name for the category',
 						},
 						{ min: 3, message: 'Name must be at least 3 characters long' },
-						{ max: 20, message: 'Name must be max 20 characters long' },
+						{ max: 40, message: 'Name must be max 40 characters long' },
 					]}
 				>
-					<Input />
+					<Input showCount maxLength={40} />
 				</Form.Item>
 
 				<Form.Item

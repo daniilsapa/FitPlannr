@@ -30,6 +30,7 @@ import { FormWeek, FormWorkout } from './types';
 import { Category } from '../../entities/category/model';
 import { Exercise } from '../../entities/exercise/model';
 import { Client } from '../../entities/client/model';
+import { AddToFlowButton } from '../../features/workout/flow';
 
 // ---
 
@@ -66,6 +67,8 @@ export default function MobileView({
 	categories,
 	exercise,
 }: MobileViewProps) {
+	// @ts-ignore
+	const workoutId = initialValues?._id;
 	const { token } = useToken();
 	const [currentWeek, setCurrentWeek] = useState<number | string>(
 		initialValues?.plan?.length ? 0 : 'new'
@@ -251,6 +254,12 @@ export default function MobileView({
 											<SaveOutlined /> <I18nMessage id="Workout.form.save" />
 										</Button>
 									</Form.Item>
+
+									{workoutId && (
+										<Form.Item style={{ marginBottom: '0px' }}>
+											<AddToFlowButton workoutId={workoutId} />
+										</Form.Item>
+									)}
 								</Space>
 							</Space>
 						</div>

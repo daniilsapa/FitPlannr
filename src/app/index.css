@@ -6,12 +6,34 @@
 	display: none;
 }
 
+.ant-list-item-meta-title {
+	max-width: 100%;
+	overflow: auto;
+	scrollbar-width: none;
+	-ms-overflow-style: none; /* IE and Edge */
+}
+
+/* width */
+
+.ant-list-item-meta-title::-webkit-scrollbar {
+	display: none; /* Safari and Chrome */
+	background: transparent;
+	box-shadow: none;
+}
+
 @media screen and (width <= 1439px) {
 	.desktop-menu {
 		display: none !important;
 	}
 
 	.mobile-menu {
-		display: block;
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		width: 100%;
 	}
+}
+
+@media screen and (width <= 768px) {
+	padding-inline: 1.5em;
 }

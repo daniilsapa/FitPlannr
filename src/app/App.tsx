@@ -7,11 +7,13 @@ import {
 	theme,
 	Popover,
 	Button,
+	Tag,
 } from 'antd';
 import {
 	BuildOutlined,
 	MenuOutlined,
 	RiseOutlined,
+	TableOutlined,
 	UnorderedListOutlined,
 	UserOutlined,
 } from '@ant-design/icons';
@@ -32,6 +34,7 @@ import { I18nProvider, locales } from './i18n';
 // UI
 import AuthPage from '../pages/auth';
 import LogOutButton from '../entities/user/ui/LogOutButton';
+import FlowPage from '../pages/flow';
 import CategoriesPage from '../pages/categories';
 import CategorySinglePage from '../pages/category-single';
 import { fetchCategories } from '../entities/category/lib/category-slice';
@@ -50,9 +53,9 @@ import LocaleSwitcher from './ui/LocaleSwitcher';
 
 // Styles
 import './index.css';
+import { flowColor } from '../features/workout/flow';
 
 // Assets
-
 import logo from './logo.svg';
 import logoWhite from './logo-white.svg';
 import ThemeSwitcher from './ui/ThemeSwitcher';
@@ -92,6 +95,13 @@ const items: MenuItem[] = [
 		4,
 		<UnorderedListOutlined />
 	),
+	prepareItemProps(
+		<span style={{ color: flowColor }}>
+			Flow <Tag color={flowColor}>New</Tag>
+		</span>,
+		5,
+		<TableOutlined />
+	),
 ];
 
 interface ThemeData {
@@ -103,6 +113,7 @@ const navigation = [
 	{ label: 'Clients', key: 2, target: '/clients' },
 	{ label: 'Exercises', key: 3, target: '/exercises' },
 	{ label: 'Categories', key: 4, target: '/categories' },
+	{ label: 'Categories', key: 5, target: '/flow' },
 ];
 
 const themes: ThemeData = {
@@ -223,8 +234,8 @@ function App() {
 								>
 									<div
 										style={{
-											maxWidth: '40em',
-											minWidth: '40em',
+											maxWidth: '44em',
+											minWidth: '44em',
 											width: '100%',
 										}}
 									>
@@ -306,6 +317,19 @@ function App() {
 						</Header>
 						<Content style={{ paddingTop: '2em' }}>
 							<Routes>
+								<Route
+									path="/flow"
+									element={
+										<ProtectedRoute
+											navigateTo="/auth"
+											isAuthenticated={
+												isLoading || (isAuthenticated && !isLoading)
+											}
+										>
+											<FlowPage />
+										</ProtectedRoute>
+									}
+								/>
 								<Route
 									path="/category/:id"
 									element={

@@ -44,6 +44,7 @@ import { MAX_TITLE_LENGTH, MIN_TITLE_LENGTH } from './constants';
 import WeekForm from './WeekForm';
 import LoadCalculator from './LoadCalculator';
 import MobileView from './MobileView';
+import { AddToFlowButton } from '../../features/workout/flow';
 
 // ---
 
@@ -99,6 +100,8 @@ export default function WorkoutAddEditForm({
 	initialValues,
 	clearAfterSubmit,
 }: WorkoutAddEditFormProps) {
+	// @ts-ignore
+	const workoutId = initialValues?._id;
 	const categories = useAppSelector(selectCategoryEntities) as Record<
 		string,
 		Category
@@ -356,6 +359,16 @@ export default function WorkoutAddEditForm({
 														<I18nMessage id="Workout.form.save" />
 													</Button>
 												</Form.Item>
+
+												{workoutId && (
+													<Form.Item>
+														<AddToFlowButton
+															type="default"
+															block
+															workoutId={workoutId}
+														/>
+													</Form.Item>
+												)}
 											</Space>
 										</Col>
 									</Row>

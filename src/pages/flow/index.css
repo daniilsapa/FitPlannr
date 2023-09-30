@@ -1,0 +1,20 @@
+.flow-selector-mobile {
+	display: none;
+}
+
+@media (width <= 1024px) {
+	.flow-selector-desktop {
+		display: none;
+	}
+
+	.flow-selector-mobile {
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		z-index: 2;
+		display: flex;
+		justify-content: flex-end;
+		width: 100%;
+		padding: 0.5em 1em;
+	}
+}

@@ -74,7 +74,7 @@ function ExerciseAddEditForm({
 						{ max: 40, message: 'Name must be max 40 characters long' },
 					]}
 				>
-					<Input />
+					<Input showCount maxLength={40} />
 				</Form.Item>
 
 				<Form.Item
@@ -83,11 +83,11 @@ function ExerciseAddEditForm({
 					rules={[
 						{
 							max: 1000,
-							message: 'Description must be max 100 characters long',
+							message: 'Description must be max 1000 characters long',
 						},
 					]}
 				>
-					<Input.TextArea />
+					<Input.TextArea showCount maxLength={1000} />
 				</Form.Item>
 
 				<Form.Item

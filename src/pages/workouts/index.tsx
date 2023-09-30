@@ -10,6 +10,7 @@ import {
 	theme,
 	Popconfirm,
 	Spin,
+	Tag,
 } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
@@ -22,6 +23,12 @@ import {
 	selectIsLoading as selectWorkoutsAreLoading,
 } from '../../entities/workout/lib/workout-slice';
 import { Workout } from '../../entities/workout/model';
+import {
+	AddToFlowButton,
+	flowColor,
+	getWorkoutsInFlow,
+	RemoveFromFlowButton,
+} from '../../features/workout/flow';
 
 // ---
 
@@ -58,6 +65,7 @@ export default function WorkoutsPage() {
 	const filteredData = workouts.filter((item: Workout) =>
 		item.title.toLowerCase().includes(filterQuery.toLowerCase())
 	);
+	const [workoutsInFlow, setWorkoutsInFlow] = useState(getWorkoutsInFlow());
 
 	// TODO: Move to i18n messages
 	const text = 'Are you sure to delete this task?';
@@ -80,37 +88,66 @@ export default function WorkoutsPage() {
 							size="small"
 							bordered
 							dataSource={filteredData}
-							renderItem={(item: Workout) => (
-								<List.Item
-									key={item._id}
-									actions={[
-										<Link to={`/workout/${item._id}`} key="1">
-											<Button type="text">
-												<EditOutlined />
-											</Button>
-										</Link>,
-										<Popconfirm
-											key="2"
-											placement="topRight"
-											title={text}
-											description={description}
-											onConfirm={() => dispatch(deleteWorkout(item._id))}
-											okText="Yes"
-											cancelText="No"
-										>
-											<Button type="text">
-												<DeleteOutlined
-													style={{
-														color: theme.defaultConfig.token.colorError,
-													}}
+							renderItem={(item: Workout) => {
+								const isInFlow = workoutsInFlow.includes(item._id);
+
+								return (
+									<List.Item
+										title={item.title}
+										key={item._id}
+										actions={[
+											isInFlow ? (
+												<RemoveFromFlowButton
+													key="1"
+													size="small"
+													workoutId={item._id}
+													concise
+													onClick={() => setWorkoutsInFlow(getWorkoutsInFlow())}
 												/>
-											</Button>
-										</Popconfirm>,
-									]}
-								>
-									{item.title}
-								</List.Item>
-							)}
+											) : (
+												<AddToFlowButton
+													key="1"
+													size="small"
+													workoutId={item._id}
+													concise
+													onClick={() => setWorkoutsInFlow(getWorkoutsInFlow())}
+												/>
+											),
+											<Link to={`/workout/${item._id}`} key="2">
+												<Button size="small" type="text">
+													<EditOutlined />
+												</Button>
+											</Link>,
+											<Popconfirm
+												key="3"
+												placement="topRight"
+												title={text}
+												description={description}
+												onConfirm={() => dispatch(deleteWorkout(item._id))}
+												okText="Yes"
+												cancelText="No"
+											>
+												<Button size="small" type="text">
+													<DeleteOutlined
+														style={{
+															color: theme.defaultConfig.token.colorError,
+														}}
+													/>
+												</Button>
+											</Popconfirm>,
+										]}
+									>
+										<List.Item.Meta
+											title={
+												<span>
+													{isInFlow && <Tag color={flowColor}>F</Tag>}
+													{item.title}
+												</span>
+											}
+										/>
+									</List.Item>
+								);
+							}}
 						/>
 					</Spin>
 				</Col>
