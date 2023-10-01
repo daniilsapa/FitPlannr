@@ -34,12 +34,12 @@ export default function GoogleSignInForm({ switchToSignUp }: SignInFormProps) {
 		if (handle) {
 			try {
 				await new Promise(function handlePopup(resolve, reject) {
-					const interval = setInterval(function checkClosed() {
-						if (handle.closed) {
-							clearInterval(interval);
-							reject();
-						}
-					}, 1000);
+					// const interval = setInterval(function checkClosed() {
+					// 	if (handle.closed) {
+					// 		clearInterval(interval);
+					// 		reject();
+					// 	}
+					// }, 1000);
 					window.addEventListener('message', (event) => {
 						if (event.origin !== import.meta.env.VITE_API_ORIGIN) return;
 
@@ -48,7 +48,7 @@ export default function GoogleSignInForm({ switchToSignUp }: SignInFormProps) {
 						} else {
 							reject();
 						}
-						clearInterval(interval);
+						// clearInterval(interval);
 					});
 				});
 
@@ -70,7 +70,14 @@ export default function GoogleSignInForm({ switchToSignUp }: SignInFormProps) {
 		/>
 	) : (
 		<Spin spinning={isPending} delay={200}>
-			<div>
+			<div
+				style={{
+					width: '100%',
+					maxWidth: '23em',
+					margin: '0 auto',
+					padding: '0px 1em',
+				}}
+			>
 				<Title level={2}>
 					<I18nMessage id="User.signIn" />
 				</Title>
@@ -81,7 +88,12 @@ export default function GoogleSignInForm({ switchToSignUp }: SignInFormProps) {
 					layout="vertical"
 				>
 					{error && (
-						<Alert type="error" message={<I18nMessage id={error} />} banner />
+						<Alert
+							style={{ marginBottom: '1em' }}
+							type="error"
+							message={<I18nMessage id={error} />}
+							banner
+						/>
 					)}
 					<Form.Item>
 						<Button

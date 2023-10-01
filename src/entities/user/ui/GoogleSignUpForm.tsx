@@ -125,7 +125,12 @@ export default function GoogleSignUpForm({ switchToSignIn }: SignUpFormProps) {
 		/>
 	) : (
 		<Spin spinning={isPending} delay={200}>
-			<div>
+			<div
+				style={{
+					maxWidth: '23em',
+					margin: '0 auto',
+				}}
+			>
 				<Title level={2}>
 					<I18nMessage id="User.signUp" />
 				</Title>
@@ -138,7 +143,12 @@ export default function GoogleSignUpForm({ switchToSignIn }: SignUpFormProps) {
 						form={form}
 					>
 						{error && (
-							<Alert type="error" message={<I18nMessage id={error} />} banner />
+							<Alert
+								style={{ marginBottom: '1em' }}
+								type="error"
+								message={<I18nMessage id={error} />}
+								banner
+							/>
 						)}
 						<Form.Item
 							rules={[
@@ -155,7 +165,7 @@ export default function GoogleSignUpForm({ switchToSignIn }: SignUpFormProps) {
 							<Input prefix={<BarcodeOutlined />} />
 						</Form.Item>
 
-						<Button type="primary" htmlType="submit" disabled={isPending}>
+						<Button block type="primary" htmlType="submit" disabled={isPending}>
 							<I18nMessage id="User.next" />
 						</Button>
 					</Form>

@@ -234,8 +234,8 @@ function App() {
 								>
 									<div
 										style={{
-											maxWidth: '44em',
-											minWidth: '44em',
+											maxWidth: '46em',
+											minWidth: '46em',
 											width: '100%',
 										}}
 									>
