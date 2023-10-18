@@ -30,7 +30,6 @@ import { FormWeek, FormWorkout } from './types';
 import { Category } from '../../entities/category/model';
 import { Exercise } from '../../entities/exercise/model';
 import { Client } from '../../entities/client/model';
-import { AddToFlowButton } from '../../features/workout/flow';
 
 // ---
 
@@ -68,7 +67,6 @@ export default function MobileView({
 	exercise,
 }: MobileViewProps) {
 	// @ts-ignore
-	const workoutId = initialValues?._id;
 	const { token } = useToken();
 	const [currentWeek, setCurrentWeek] = useState<number | string>(
 		initialValues?.plan?.length ? 0 : 'new'
@@ -79,8 +77,18 @@ export default function MobileView({
 	};
 
 	return (
-		<div className="mobile-view" style={{ margin: '2em 1em 45em 1em' }}>
-			<Row>
+		<div
+			className="mobile-view"
+			style={{
+				height: 'calc(100vh - 64px - 151px - 32px - 1em)',
+				overflow: 'auto',
+			}}
+		>
+			<Row
+				style={{
+					padding: '1em 1em 30em',
+				}}
+			>
 				<Col
 					xs={{ span: 24, offset: 0 }}
 					sm={{ span: 16, offset: 4 }}
@@ -236,6 +244,12 @@ export default function MobileView({
 									}}
 								>
 									<Form.Item style={{ marginBottom: '0px' }}>
+										<Button block htmlType="submit">
+											<SaveOutlined /> <I18nMessage id="Workout.form.save" />
+										</Button>
+									</Form.Item>
+
+									<Form.Item style={{ marginBottom: '0px' }}>
 										<Button type="default" block onClick={onExport}>
 											<GoogleOutlined />{' '}
 											<I18nMessage id="Workout.form.saveAndExport" />
@@ -248,18 +262,6 @@ export default function MobileView({
 											<I18nMessage id="Workout.form.saveAndDuplicate" />
 										</Button>
 									</Form.Item>
-
-									<Form.Item style={{ marginBottom: '0px' }}>
-										<Button block htmlType="submit">
-											<SaveOutlined /> <I18nMessage id="Workout.form.save" />
-										</Button>
-									</Form.Item>
-
-									{workoutId && (
-										<Form.Item style={{ marginBottom: '0px' }}>
-											<AddToFlowButton workoutId={workoutId} />
-										</Form.Item>
-									)}
 								</Space>
 							</Space>
 						</div>

@@ -36,7 +36,7 @@ const columns = [
 	},
 ];
 
-const { Text } = Typography;
+const { Text, Title } = Typography;
 
 function SetsTable({ sets }: { sets: PlannedSet[] }) {
 	return (
@@ -56,24 +56,28 @@ export default function DayFlow({ day, weekTitle, onBack }: DayViewProps) {
 
 	return (
 		<div>
-			<div
-				style={{
-					display: 'flex',
-				}}
-			>
+			<div>
 				<Button type="text" onClick={() => onBack()}>
 					<LeftOutlined />{' '}
 					<I18nMessage id="Common.backTo" value={{ what: weekTitle }} />
 				</Button>
-				<h2
+			</div>
+
+			<div
+				style={{
+					display: 'flex',
+					justifyContent: 'center',
+				}}
+			>
+				<Title
+					level={2}
 					style={{
-						marginTop: '3px',
-						marginLeft: '3em',
+						marginTop: '1em',
 						marginBottom: 0,
 					}}
 				>
 					{day.dayTitle}
-				</h2>
+				</Title>
 			</div>
 
 			{day.exercises.map((exercise) => (

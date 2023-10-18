@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
 	List,
 	Input,
@@ -21,6 +21,7 @@ import {
 	selectIsLoading as selectClientsAreLoading,
 } from '../../entities/client/lib/client-slice';
 import { I18nMessage } from '../../shared/ui/i18n';
+import ChosenClientContext from '../../entities/client/contexts/chosen-client-context';
 
 // ---
 
@@ -49,6 +50,7 @@ function ClientSearch({ onSearch }: ClientSearchProps) {
 }
 
 export default function ClientsPage() {
+	const currentClient = useContext(ChosenClientContext);
 	const loading = useAppSelector(selectClientsAreLoading);
 	const clients = useAppSelector(selectAllClients);
 	const dispatch = useAppDispatch();
@@ -62,6 +64,7 @@ export default function ClientsPage() {
 	return (
 		<div style={{ margin: '2em 2em 0' }}>
 			<Row>
+				{currentClient}
 				<Col
 					xs={{ span: 24, offset: 0 }}
 					sm={{ span: 16, offset: 4 }}

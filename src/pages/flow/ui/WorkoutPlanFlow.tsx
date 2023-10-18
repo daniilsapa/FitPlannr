@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Empty } from 'antd';
+import { Button, Empty, Typography } from 'antd';
 import { RightOutlined } from '@ant-design/icons';
 
 import { Workout } from '../../../entities/workout/model';
@@ -10,6 +10,8 @@ interface PlanViewProps {
 	workout: Workout;
 	onChooseWeek: (weekIndex: number) => void;
 }
+
+const { Title } = Typography;
 
 export default function WorkoutPlanFlow({
 	workout,
@@ -23,13 +25,13 @@ export default function WorkoutPlanFlow({
 					justifyContent: 'center',
 				}}
 			>
-				<h2
+				<Title
 					style={{
 						padding: '4px 15px',
 					}}
 				>
 					{workout.title}
-				</h2>
+				</Title>
 			</div>
 			{workout.plan.length === 0 && (
 				<Empty

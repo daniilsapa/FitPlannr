@@ -141,7 +141,10 @@ export default function WeekForm({
 				}
 			>
 				<div style={{ height: '300px', overflow: 'auto' }}>
-					<Form.List name={[field.name, 'days']}>
+					<Form.List
+						name={[field.name, 'days']}
+						initialValue={formFieldValues ? formFieldValues.days : []}
+					>
 						{(fields, { add, remove: removeDay }) => (
 							<>
 								<Collapse
@@ -175,7 +178,7 @@ export default function WeekForm({
 											<DayForm
 												name={name}
 												formFieldValues={
-													formFieldValues
+													formFieldValues && formFieldValues.days
 														? formFieldValues.days[dayIndex]
 														: null
 												}

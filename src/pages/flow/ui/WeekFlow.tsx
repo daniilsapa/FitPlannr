@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Empty } from 'antd';
+import { Button, Empty, Typography } from 'antd';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 
 import { Week } from '../../../entities/workout/model';
@@ -15,6 +15,8 @@ interface WeekViewProps {
 	onBack: () => void;
 }
 
+const { Title } = Typography;
+
 export default function WeekFlow({
 	week,
 	weekIndex,
@@ -24,24 +26,28 @@ export default function WeekFlow({
 }: WeekViewProps) {
 	return (
 		<div>
-			<div
-				style={{
-					display: 'flex',
-				}}
-			>
+			<div>
 				<Button type="text" onClick={() => onBack()}>
 					<LeftOutlined />{' '}
 					<I18nMessage id="Common.backTo" value={{ what: workoutTitle }} />
 				</Button>
-				<h2
+			</div>
+
+			<div
+				style={{
+					display: 'flex',
+					justifyContent: 'center',
+				}}
+			>
+				<Title
+					level={2}
 					style={{
-						marginTop: '3px',
-						marginLeft: '3em',
+						marginTop: '1em',
 						marginBottom: 0,
 					}}
 				>
 					{week.weekTitle}
-				</h2>
+				</Title>
 			</div>
 
 			{week.days.length === 0 && (

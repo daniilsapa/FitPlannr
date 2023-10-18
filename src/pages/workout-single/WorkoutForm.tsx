@@ -281,7 +281,10 @@ export default function WorkoutAddEditForm({
 	const handleApplyToAll = (weekIndex: number) => {
 		const prevPlanState = form.getFieldValue('plan');
 		const weekToApply = structuredClone(prevPlanState[weekIndex]);
-		const newPlan = prevPlanState.map(() => weekToApply);
+		const newPlan = prevPlanState.map((originalWeek: FormWeek) => ({
+			...weekToApply,
+			weekTitle: originalWeek.weekTitle,
+		}));
 
 		form.setFieldsValue({
 			plan: newPlan,

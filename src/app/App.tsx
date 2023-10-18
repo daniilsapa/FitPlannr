@@ -31,6 +31,8 @@ import {
 } from '../entities/user/lib/userSlice';
 import { I18nProvider, locales } from './i18n';
 
+import ChosenClientContext from '../entities/client/contexts/chosen-client-context';
+
 // UI
 import AuthPage from '../pages/auth';
 import LogOutButton from '../entities/user/ui/LogOutButton';
@@ -194,90 +196,63 @@ function App() {
 	}, [isAuthenticated]);
 
 	return (
-		<ConfigProvider
-			theme={{
-				algorithm: themes[currentTheme],
-				token: {
-					colorPrimary: '#5c99c8',
-				},
-			}}
-		>
-			<BrowserRouter>
-				<I18nProvider locale={locale}>
-					<UnderConstructionPlug />
+		<ChosenClientContext.Provider value="Julius">
+			<ConfigProvider
+				theme={{
+					algorithm: themes[currentTheme],
+					token: {
+						colorPrimary: '#5c99c8',
+					},
+				}}
+			>
+				<ChosenClientContext.Provider value="Hugh">
+					<BrowserRouter>
+						<I18nProvider locale={locale}>
+							<UnderConstructionPlug />
 
-					<Layout style={{ minHeight: '100vh' }}>
-						<Header>
-							<div
-								style={{
-									display: 'flex',
-								}}
-							>
-								<div>
-									<Image
-										alt="Site logo"
-										src={currentTheme === 'dark' ? logoWhite : logo}
-										width="100px"
-										preview={false}
-									/>
-								</div>
-
-								<div
-									className="desktop-menu"
-									style={{
-										display: 'flex',
-										alignItems: 'center',
-										justifyContent: 'space-between',
-										paddingLeft: '1em',
-										width: '100%',
-									}}
-								>
-									<div
-										style={{
-											maxWidth: '46em',
-											minWidth: '46em',
-											width: '100%',
-										}}
-									>
-										{isAuthenticated && <NavMenu menuItems={items} />}
-									</div>
+							<Layout style={{ minHeight: 'calc(100vh - 64px)' }}>
+								<Header>
 									<div
 										style={{
 											display: 'flex',
-											gap: '0 1em',
-											alignItems: 'center',
 										}}
 									>
-										<div>{isAuthenticated && <LogOutButton />}</div>
-
 										<div>
-											<LocaleSwitcher
-												locale={locale}
-												onChangeLocale={changeLocale}
+											<Image
+												alt="Site logo"
+												src={currentTheme === 'dark' ? logoWhite : logo}
+												width="100px"
+												preview={false}
 											/>
 										</div>
-										<ThemeSwitcher
-											theme={currentTheme}
-											onThemeChange={handleThemeChange}
-										/>
-									</div>
-								</div>
 
-								<div className="mobile-menu">
-									<Popover
-										content={
+										<div
+											className="desktop-menu"
+											style={{
+												display: 'flex',
+												alignItems: 'center',
+												justifyContent: 'space-between',
+												paddingLeft: '1em',
+												width: '100%',
+											}}
+										>
+											<div
+												style={{
+													maxWidth: '46em',
+													minWidth: '46em',
+													width: '100%',
+												}}
+											>
+												{isAuthenticated && <NavMenu menuItems={items} />}
+											</div>
 											<div
 												style={{
 													display: 'flex',
-													flexDirection: 'column',
-													gap: '2em 0',
+													gap: '0 1em',
+													alignItems: 'center',
 												}}
 											>
-												<div>
-													{isAuthenticated && (
-														<NavMenu menuItems={items} inline />
-													)}
-												</div>
+												<div>{isAuthenticated && <LogOutButton />}</div>
 
 												<div>
 													<LocaleSwitcher
@@ -285,251 +260,282 @@ function App() {
 														onChangeLocale={changeLocale}
 													/>
 												</div>
-
-												<div
-													style={{
-														display: 'flex',
-														justifyContent: 'space-between',
-														alignItems: 'center',
-													}}
-												>
-													<ThemeSwitcher
-														theme={currentTheme}
-														onThemeChange={handleThemeChange}
-													/>
-													{isAuthenticated && <LogOutButton />}
-												</div>
+												<ThemeSwitcher
+													theme={currentTheme}
+													onThemeChange={handleThemeChange}
+												/>
 											</div>
-										}
-										color="rgb(0, 21, 41)"
-										overlayInnerStyle={{
-											boxShadow: '0 0 10px 0 rgba(0, 0, 0, 0.6)',
-										}}
-										trigger="click"
-										placement="bottomRight"
-									>
-										<Button>
-											<MenuOutlined />
-										</Button>
-									</Popover>
-								</div>
-							</div>
-						</Header>
-						<Content style={{ paddingTop: '2em' }}>
-							<Routes>
-								<Route
-									path="/flow"
-									element={
-										<ProtectedRoute
-											navigateTo="/auth"
-											isAuthenticated={
-												isLoading || (isAuthenticated && !isLoading)
-											}
-										>
-											<FlowPage />
-										</ProtectedRoute>
-									}
-								/>
-								<Route
-									path="/category/:id"
-									element={
-										<ProtectedRoute
-											navigateTo="/auth"
-											isAuthenticated={
-												isLoading || (isAuthenticated && !isLoading)
-											}
-										>
-											<CategorySinglePage />
-										</ProtectedRoute>
-									}
-								/>
-								<Route
-									path="/category"
-									element={
-										<ProtectedRoute
-											navigateTo="/auth"
-											isAuthenticated={
-												isLoading || (isAuthenticated && !isLoading)
-											}
-										>
-											<CategorySinglePage />
-										</ProtectedRoute>
-									}
-								/>
-								<Route
-									path="/exercise"
-									element={
-										<ProtectedRoute
-											navigateTo="/auth"
-											isAuthenticated={
-												isLoading || (isAuthenticated && !isLoading)
-											}
-										>
-											<ExerciseSinglePage />
-										</ProtectedRoute>
-									}
-								/>
-								<Route
-									path="/exercise/:id"
-									element={
-										<ProtectedRoute
-											navigateTo="/auth"
-											isAuthenticated={
-												isLoading || (isAuthenticated && !isLoading)
-											}
-										>
-											<ExerciseSinglePage />
-										</ProtectedRoute>
-									}
-								/>
-								<Route
-									path="/exercises"
-									element={
-										<ProtectedRoute
-											navigateTo="/auth"
-											isAuthenticated={
-												isLoading || (isAuthenticated && !isLoading)
-											}
-										>
-											<ExercisesPage />
-										</ProtectedRoute>
-									}
-								/>
+										</div>
 
-								<Route
-									path="/client"
-									element={
-										<ProtectedRoute
-											navigateTo="/auth"
-											isAuthenticated={
-												isLoading || (isAuthenticated && !isLoading)
-											}
-										>
-											<ClientSinglePage />
-										</ProtectedRoute>
-									}
-								/>
-								<Route
-									path="/client/:id"
-									element={
-										<ProtectedRoute
-											navigateTo="/auth"
-											isAuthenticated={
-												isLoading || (isAuthenticated && !isLoading)
-											}
-										>
-											<ClientSinglePage />
-										</ProtectedRoute>
-									}
-								/>
-								<Route
-									path="/clients"
-									element={
-										<ProtectedRoute
-											navigateTo="/auth"
-											isAuthenticated={
-												isLoading || (isAuthenticated && !isLoading)
-											}
-										>
-											<ClientsPage />
-										</ProtectedRoute>
-									}
-								/>
+										<div className="mobile-menu">
+											<Popover
+												content={
+													<div
+														style={{
+															display: 'flex',
+															flexDirection: 'column',
+															gap: '2em 0',
+														}}
+													>
+														<div>
+															{isAuthenticated && (
+																<NavMenu menuItems={items} inline />
+															)}
+														</div>
 
-								<Route
-									path="/categories"
-									element={
-										<ProtectedRoute
-											navigateTo="/auth"
-											isAuthenticated={
-												isLoading || (isAuthenticated && !isLoading)
-											}
-										>
-											<CategoriesPage />
-										</ProtectedRoute>
-									}
-								/>
-								<Route
-									path="/workout"
-									element={
-										<ProtectedRoute
-											navigateTo="/auth"
-											isAuthenticated={
-												isLoading || (isAuthenticated && !isLoading)
-											}
-										>
-											<WorkoutSinglePage />
-										</ProtectedRoute>
-									}
-								/>
-								<Route
-									path="/workout/:id"
-									element={
-										<ProtectedRoute
-											navigateTo="/auth"
-											isAuthenticated={
-												isLoading || (isAuthenticated && !isLoading)
-											}
-										>
-											<WorkoutSinglePage />
-										</ProtectedRoute>
-									}
-								/>
-								<Route
-									path="/workouts"
-									element={
-										<ProtectedRoute
-											navigateTo="/auth"
-											isAuthenticated={
-												isLoading || (isAuthenticated && !isLoading)
-											}
-										>
-											<WorkoutsPage />
-										</ProtectedRoute>
-									}
-								/>
-								<Route
-									path="/"
-									element={
-										<ProtectedRoute
-											navigateTo="/auth"
-											isAuthenticated={
-												isLoading || (isAuthenticated && !isLoading)
-											}
-										>
-											<WorkoutsPage />
-										</ProtectedRoute>
-									}
-								/>
-								<Route
-									path="/auth"
-									element={
-										<AuthPage
-											isAuthenticated={
-												isLoading || (isAuthenticated && !isLoading)
+														<div>
+															<LocaleSwitcher
+																locale={locale}
+																onChangeLocale={changeLocale}
+															/>
+														</div>
+
+														<div
+															style={{
+																display: 'flex',
+																justifyContent: 'space-between',
+																alignItems: 'center',
+															}}
+														>
+															<ThemeSwitcher
+																theme={currentTheme}
+																onThemeChange={handleThemeChange}
+															/>
+															{isAuthenticated && <LogOutButton />}
+														</div>
+													</div>
+												}
+												color="rgb(0, 21, 41)"
+												overlayInnerStyle={{
+													boxShadow: '0 0 10px 0 rgba(0, 0, 0, 0.6)',
+												}}
+												trigger="click"
+												placement="bottomRight"
+											>
+												<Button>
+													<MenuOutlined />
+												</Button>
+											</Popover>
+										</div>
+									</div>
+								</Header>
+								<Content style={{ paddingTop: '2em' }}>
+									<Routes>
+										<Route
+											path="/flow"
+											element={
+												<ProtectedRoute
+													navigateTo="/auth"
+													isAuthenticated={
+														isLoading || (isAuthenticated && !isLoading)
+													}
+												>
+													<FlowPage />
+												</ProtectedRoute>
 											}
 										/>
-									}
-								/>
-								<Route
-									path="*"
-									element={
-										<ProtectedRoute
-											navigateTo="/auth"
-											isAuthenticated={
-												isLoading || (isAuthenticated && !isLoading)
+										<Route
+											path="/category/:id"
+											element={
+												<ProtectedRoute
+													navigateTo="/auth"
+													isAuthenticated={
+														isLoading || (isAuthenticated && !isLoading)
+													}
+												>
+													<CategorySinglePage />
+												</ProtectedRoute>
 											}
-										>
-											<NotFoundPage />
-										</ProtectedRoute>
-									}
-								/>
-							</Routes>
-						</Content>
-					</Layout>
-				</I18nProvider>
-			</BrowserRouter>
-		</ConfigProvider>
+										/>
+										<Route
+											path="/category"
+											element={
+												<ProtectedRoute
+													navigateTo="/auth"
+													isAuthenticated={
+														isLoading || (isAuthenticated && !isLoading)
+													}
+												>
+													<CategorySinglePage />
+												</ProtectedRoute>
+											}
+										/>
+										<Route
+											path="/exercise"
+											element={
+												<ProtectedRoute
+													navigateTo="/auth"
+													isAuthenticated={
+														isLoading || (isAuthenticated && !isLoading)
+													}
+												>
+													<ExerciseSinglePage />
+												</ProtectedRoute>
+											}
+										/>
+										<Route
+											path="/exercise/:id"
+											element={
+												<ProtectedRoute
+													navigateTo="/auth"
+													isAuthenticated={
+														isLoading || (isAuthenticated && !isLoading)
+													}
+												>
+													<ExerciseSinglePage />
+												</ProtectedRoute>
+											}
+										/>
+										<Route
+											path="/exercises"
+											element={
+												<ProtectedRoute
+													navigateTo="/auth"
+													isAuthenticated={
+														isLoading || (isAuthenticated && !isLoading)
+													}
+												>
+													<ExercisesPage />
+												</ProtectedRoute>
+											}
+										/>
+
+										<Route
+											path="/client"
+											element={
+												<ProtectedRoute
+													navigateTo="/auth"
+													isAuthenticated={
+														isLoading || (isAuthenticated && !isLoading)
+													}
+												>
+													<ClientSinglePage />
+												</ProtectedRoute>
+											}
+										/>
+										<Route
+											path="/client/:id"
+											element={
+												<ProtectedRoute
+													navigateTo="/auth"
+													isAuthenticated={
+														isLoading || (isAuthenticated && !isLoading)
+													}
+												>
+													<ClientSinglePage />
+												</ProtectedRoute>
+											}
+										/>
+										<Route
+											path="/clients"
+											element={
+												<ProtectedRoute
+													navigateTo="/auth"
+													isAuthenticated={
+														isLoading || (isAuthenticated && !isLoading)
+													}
+												>
+													<ClientsPage />
+												</ProtectedRoute>
+											}
+										/>
+
+										<Route
+											path="/categories"
+											element={
+												<ProtectedRoute
+													navigateTo="/auth"
+													isAuthenticated={
+														isLoading || (isAuthenticated && !isLoading)
+													}
+												>
+													<CategoriesPage />
+												</ProtectedRoute>
+											}
+										/>
+										<Route
+											path="/workout"
+											element={
+												<ProtectedRoute
+													navigateTo="/auth"
+													isAuthenticated={
+														isLoading || (isAuthenticated && !isLoading)
+													}
+												>
+													<WorkoutSinglePage />
+												</ProtectedRoute>
+											}
+										/>
+										<Route
+											path="/workout/:id"
+											element={
+												<ProtectedRoute
+													navigateTo="/auth"
+													isAuthenticated={
+														isLoading || (isAuthenticated && !isLoading)
+													}
+												>
+													<WorkoutSinglePage />
+												</ProtectedRoute>
+											}
+										/>
+										<Route
+											path="/workouts"
+											element={
+												<ProtectedRoute
+													navigateTo="/auth"
+													isAuthenticated={
+														isLoading || (isAuthenticated && !isLoading)
+													}
+												>
+													<WorkoutsPage />
+												</ProtectedRoute>
+											}
+										/>
+										<Route
+											path="/"
+											element={
+												<ProtectedRoute
+													navigateTo="/auth"
+													isAuthenticated={
+														isLoading || (isAuthenticated && !isLoading)
+													}
+												>
+													<WorkoutsPage />
+												</ProtectedRoute>
+											}
+										/>
+										<Route
+											path="/auth"
+											element={
+												<AuthPage
+													isAuthenticated={
+														isLoading || (isAuthenticated && !isLoading)
+													}
+												/>
+											}
+										/>
+										<Route
+											path="*"
+											element={
+												<ProtectedRoute
+													navigateTo="/auth"
+													isAuthenticated={
+														isLoading || (isAuthenticated && !isLoading)
+													}
+												>
+													<NotFoundPage />
+												</ProtectedRoute>
+											}
+										/>
+									</Routes>
+								</Content>
+							</Layout>
+						</I18nProvider>
+					</BrowserRouter>
+				</ChosenClientContext.Provider>
+			</ConfigProvider>
+		</ChosenClientContext.Provider>
 	);
 }
 

@@ -82,15 +82,29 @@ function CategoryAddEditForm({
 				>
 					<Input showCount maxLength={40} />
 				</Form.Item>
-
-				<Form.Item
-					label={<I18nMessage id="Category.color" />}
-					name="color"
-					rules={[{ required: true, message: 'Please select a color' }]}
+				<div
+					onMouseMove={(event) => event.stopPropagation()}
+					onScroll={(event) => {
+						event.stopPropagation();
+						event.preventDefault();
+					}}
+					onScrollCapture={(event) => {
+						event.stopPropagation();
+						event.preventDefault();
+					}}
+					onPointerMove={(e) => {
+						e.stopPropagation();
+						e.preventDefault();
+					}}
 				>
-					<ColorPicker format="hex" />
-				</Form.Item>
-
+					<Form.Item
+						label={<I18nMessage id="Category.color" />}
+						name="color"
+						rules={[{ required: true, message: 'Please select a color' }]}
+					>
+						<ColorPicker format="hex" />
+					</Form.Item>
+				</div>
 				<Form.Item>
 					<div
 						style={{
